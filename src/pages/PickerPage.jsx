@@ -289,6 +289,12 @@ export default function PickerPage() {
                   <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold">{selectedTeam.name}</h2>
                 </div>
                 <p className="text-sm sm:text-base text-primary-300">{selectedTeam.location}</p>
+                {selectedTeam.stadium_name && (
+                  <p className="text-xs sm:text-sm text-primary-500">
+                    {selectedTeam.stadium_name}
+                    {selectedTeam.stadium_capacity && ` (${selectedTeam.stadium_capacity.toLocaleString()})`}
+                  </p>
+                )}
               </div>
               <button
                 onClick={() => setSelectedTeam(null)}
@@ -327,9 +333,9 @@ export default function PickerPage() {
                 <div className="flex flex-col sm:flex-row sm:justify-between">
                   <span className="text-xs sm:text-sm text-primary-400">Difficulty</span>
                   <span className={`font-semibold text-sm sm:text-base ${
-                    selectedTeam.difficulty === 'Easy' || selectedTeam.difficulty === 'Beginner' ? 'text-green-400' :
-                    selectedTeam.difficulty === 'Medium' ? 'text-yellow-400' :
-                    selectedTeam.difficulty === 'Hard' ? 'text-orange-400' :
+                    selectedTeam.difficulty === 'Beginner' ? 'text-green-400' :
+                    selectedTeam.difficulty === 'Intermediate' ? 'text-yellow-400' :
+                    selectedTeam.difficulty === 'Advanced' ? 'text-orange-400' :
                     'text-red-400'
                   }`}>{selectedTeam.difficulty}</span>
                 </div>
@@ -577,11 +583,19 @@ export default function PickerPage() {
                         <span className="text-highlight text-xs font-semibold">{team.stars} ★</span>
                       </div>
                       <p className="text-primary-500 text-xs">{team.location}</p>
+                      {team.stadium_name && (
+                        <p className="text-primary-500 text-xs">
+                          {team.stadium_name}
+                          {team.stadium_capacity && (
+                            <span className="text-primary-600"> ({team.stadium_capacity.toLocaleString()})</span>
+                          )}
+                        </p>
+                      )}
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                          team.difficulty === 'Easy' || team.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-400' :
-                          team.difficulty === 'Medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                          team.difficulty === 'Hard' ? 'bg-accent/20 text-accent-400' :
+                          team.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-400' :
+                          team.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                          team.difficulty === 'Advanced' ? 'bg-accent/20 text-accent-400' :
                           'bg-red-500/20 text-red-400'
                         }`}>
                           {team.difficulty}

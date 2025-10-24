@@ -143,6 +143,18 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
+
+        {/* Changelog Button */}
+        <div className="flex justify-center mt-8 sm:mt-12">
+          <Link
+            to="/changelog"
+            className="inline-flex items-center gap-2 text-primary-400 hover:text-accent transition-colors text-sm sm:text-base font-medium"
+          >
+            <span>📋</span>
+            <span>View Changelog</span>
+            <span>→</span>
+          </Link>
+        </div>
       </section>
 
       {/* Features */}
@@ -282,6 +294,11 @@ export default function LandingPage() {
                 <li>
                   <Link to="/about" className="text-primary-400 hover:text-accent text-sm transition-colors">
                     About & FAQ
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/changelog" className="text-primary-400 hover:text-accent text-sm transition-colors">
+                    Changelog
                   </Link>
                 </li>
               </ul>

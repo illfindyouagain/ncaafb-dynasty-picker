@@ -29,7 +29,9 @@ export function useTeams() {
           defenseRating: team.defense_rating,
           stars: team.stars,
           location: team.location,
-          colors: [team.color_primary, team.color_secondary]
+          colors: [team.color_primary, team.color_secondary],
+          stadium_name: team.stadium_name,
+          stadium_capacity: team.stadium_capacity
         }))
 
         setTeams(transformedTeams)
