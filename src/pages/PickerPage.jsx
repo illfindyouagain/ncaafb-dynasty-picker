@@ -32,7 +32,7 @@ export default function PickerPage() {
         return false
       }
       
-      // Conference filter
+      // Regular conference filter
       if (filters.conference !== 'all' && team.conference !== filters.conference) return false
       
       // Single category filter
@@ -119,10 +119,12 @@ export default function PickerPage() {
   }
 
   const handleRandomPick = () => {
-    if (sortedTeams.length > 0) {
-      const randomTeam = sortedTeams[Math.floor(Math.random() * sortedTeams.length)]
-      handleTeamSelect(randomTeam)
+    if (sortedTeams.length === 0) {
+      alert('No teams match your current filters. Please adjust your filters to see teams.')
+      return
     }
+    const randomTeam = sortedTeams[Math.floor(Math.random() * sortedTeams.length)]
+    handleTeamSelect(randomTeam)
   }
 
   const resetFilters = () => {
@@ -179,8 +181,8 @@ export default function PickerPage() {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
               <div className="text-2xl sm:text-3xl">🏈</div>
-              <h1 className="text-lg sm:text-2xl font-bold text-white">
-                CFB Dynasty Picker
+              <h1 className="text-xl sm:text-2xl font-bold text-white">
+                CFB Dynasty Tools
               </h1>
             </Link>
             <Link
@@ -247,12 +249,14 @@ export default function PickerPage() {
             </button>
           </div>
           
-          <button
-            onClick={resetFilters}
-            className="px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors text-sm"
-          >
-            Clear All Filters
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={resetFilters}
+              className="px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors text-sm"
+            >
+              Clear All Filters
+            </button>
+          </div>
         </div>
 
         {/* Selected Team Display */}

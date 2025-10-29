@@ -3,6 +3,25 @@ import { Link } from 'react-router-dom'
 export default function ChangelogPage() {
   const changes = [
     {
+      date: 'October 29, 2025',
+      version: 'v1.0.2',
+      title: 'Conference Builder & Major Updates',
+      items: [
+        'NEW: Custom Conference Builder with drag-and-drop interface',
+        'Create custom conferences with up to 16 teams from any FBS conference',
+        'Add divisions (8+ teams) - name them East/West, North/South, or custom names',
+        'Export conferences as JSON files with full team data',
+        'Search and filter teams while building your conference',
+        'Rebranded to "CFB Dynasty Tools" to reflect growing toolkit',
+        'Redesigned homepage hero to showcase both Team Picker and Conference Builder',
+        'Added comprehensive SEO meta tags and Open Graph support',
+        'Integrated Vercel Analytics and Speed Insights for performance tracking',
+        'Added sitemap.xml and robots.txt for better search engine indexing',
+        'Bug fixes: Division toggle now clears assignments, duplicate team prevention, random pick validation',
+        'Updated footer to highlight new Conference Builder feature',
+      ]
+    },
+    {
       date: 'October 24, 2025',
       version: 'v1.0.1',
       title: 'Stadium Data & Difficulty Update',
@@ -18,7 +37,7 @@ export default function ChangelogPage() {
       version: 'v1.0.0',
       title: 'Initial Release',
       items: [
-        'Launched CFB Dynasty Picker with all 136 FBS teams',
+        'Launched CFB Dynasty Tools with all 136 FBS teams',
         'Team search and advanced filtering (star range, rating range, conference, difficulty, categories)',
         'Sorting options (name, rating, stars, prestige, difficulty)',
         'Exclude teams feature for personalized picking',
@@ -44,7 +63,7 @@ export default function ChangelogPage() {
             Changelog
           </h1>
           <p className="text-base sm:text-lg text-primary-300">
-            Track all updates and improvements to CFB Dynasty Picker
+            Track all updates and improvements to CFB Dynasty Tools
           </p>
         </div>
 

@@ -9,7 +9,7 @@ export default function PrivacyPolicy() {
           <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
             <div className="text-3xl">🏈</div>
             <h1 className="text-2xl font-bold text-orange-500">
-              CFB Dynasty Picker
+              CFB Dynasty Tools
             </h1>
           </Link>
         </div>

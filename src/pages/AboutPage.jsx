@@ -10,7 +10,7 @@ export default function AboutPage() {
             <Link to="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
               <div className="text-2xl sm:text-3xl">🏈</div>
               <h1 className="text-lg sm:text-2xl font-bold text-white">
-                About CFB Dynasty Picker
+                About CFB Dynasty Tools
               </h1>
             </Link>
             <Link
@@ -26,10 +26,10 @@ export default function AboutPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* About Section */}
         <section className="bg-card border border-primary-900 rounded-lg p-6 sm:p-8 mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">What is CFB Dynasty Picker?</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">What is CFB Dynasty Tools?</h2>
           <div className="space-y-4 text-primary-300">
             <p>
-              CFB Dynasty Picker is a free tool designed to help college football video game fans find the perfect team for their next Dynasty Mode playthrough.
+              CFB Dynasty Tools is a free toolkit designed to help college football video game fans find the perfect team for their next Dynasty Mode playthrough and create custom conferences.
             </p>
             <p>
               Whether you're looking for a rebuilding challenge, a powerhouse program, or something in between, our advanced filters and random selection make it easy to discover your next favorite team.
@@ -105,7 +105,7 @@ export default function AboutPage() {
           <div className="text-center">
             <h2 className="text-2xl sm:text-3xl font-bold mb-4">☕ Support This Project</h2>
             <p className="text-lg mb-6">
-              CFB Dynasty Picker is completely free to use, but hosting and maintaining this site costs money.
+              CFB Dynasty Tools is completely free to use, but hosting and maintaining this site costs money.
             </p>
             <p className="mb-6">
               If you've found this tool helpful and want to support future development, consider sending a donation! Every contribution helps keep the site running and supports new features.
@@ -189,7 +189,7 @@ export default function AboutPage() {
         {/* Credits */}
         <section className="mt-8 text-center text-sm text-primary-500">
           <p>Built with ❤️ for the CFB gaming community</p>
-          <p className="mt-2">© {new Date().getFullYear()} CFB Dynasty Picker • Fan Project</p>
+          <p className="mt-2">Now featuring Custom Conference Builder 🏗️</p>
         </section>
       </main>
     </div>

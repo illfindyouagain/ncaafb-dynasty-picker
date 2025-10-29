@@ -3,6 +3,7 @@ import LandingPage from './pages/LandingPage'
 import PickerPage from './pages/PickerPage'
 import AboutPage from './pages/AboutPage'
 import ChangelogPage from './pages/ChangelogPage'
+import ConferenceBuilderPage from './pages/ConferenceBuilderPage'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route path="/picker" element={<PickerPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/changelog" element={<ChangelogPage />} />
+      <Route path="/conference-builder" element={<ConferenceBuilderPage />} />
     </Routes>
   )
 }

@@ -26,7 +26,7 @@ export default function LandingPage() {
     { label: 'Teams', value: '136' },
     { label: 'Categories', value: '10' },
     { label: 'Conferences', value: '10' },
-    { label: '2025 Realignment', value: '✓' },
+    { label: 'Custom Builder', value: '✓' },
   ]
 
   const features = [
@@ -49,6 +49,11 @@ export default function LandingPage() {
       title: 'Random Dynasty Mode',
       description: 'Can\'t decide? Let fate choose your next dynasty adventure',
       icon: '🎲',
+    },
+    {
+      title: 'Custom Conference Builder',
+      description: 'Create your own custom conferences with drag-and-drop team selection',
+      icon: '🏗️',
     },
     {
       title: 'Conference Filters',
@@ -94,48 +99,76 @@ export default function LandingPage() {
             <div className="flex items-center gap-2 sm:gap-3">
               <div className="text-2xl sm:text-3xl">🏈</div>
               <h1 className="text-lg sm:text-2xl font-bold text-white">
-                CFB Dynasty Picker
+                CFB Dynasty Tools
               </h1>
             </div>
-            <Link
-              to="/picker"
-              className="bg-accent hover:bg-accent-600 px-4 sm:px-6 py-2 rounded-lg font-semibold transition-all text-sm sm:text-base"
-            >
-              Start Picking
-            </Link>
+            <div className="flex gap-2 sm:gap-3">
+              <Link
+                to="/conference-builder"
+                className="bg-accent hover:bg-accent-600 px-4 sm:px-6 py-2 rounded-lg font-semibold transition-all text-sm sm:text-base"
+              >
+                Builder
+              </Link>
+              <Link
+                to="/picker"
+                className="bg-accent hover:bg-accent-600 px-4 sm:px-6 py-2 rounded-lg font-semibold transition-all text-sm sm:text-base"
+              >
+                Start Picking
+              </Link>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Hero */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 text-center">
-        <div className="inline-block mb-4 sm:mb-6 px-3 sm:px-4 py-1.5 sm:py-2 bg-highlight/20 border border-highlight rounded-full text-highlight text-xs sm:text-sm font-medium">
-          ⚠️ Unofficial Fan Tool
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="text-center mb-12 sm:mb-16">
+          <div className="inline-block mb-4 sm:mb-6 px-3 sm:px-4 py-1.5 sm:py-2 bg-highlight/20 border border-highlight rounded-full text-highlight text-xs sm:text-sm font-medium">
+            ⚠️ Unofficial Fan Tool
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 text-white leading-tight">
+            Your Dynasty Toolkit
+          </h2>
+          <p className="text-base sm:text-lg lg:text-xl text-primary-300 mb-8 sm:mb-10 max-w-2xl mx-auto px-4">
+            Pick teams, build custom conferences, and plan your perfect CFB dynasty with our suite of free tools.
+          </p>
         </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 text-white leading-tight">
-          Find Your Perfect<br />Dynasty Challenge
-        </h2>
-        <p className="text-base sm:text-lg lg:text-xl text-primary-300 mb-8 sm:mb-10 max-w-2xl mx-auto px-4">
-          Stop scrolling through menus. Pick your next college football dynasty team
-          from all 136 FBS teams organized into categories like Blue Bloods, Dark Horses, and Rebuild Projects.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-          <Link
-            to="/picker"
-            className="bg-accent hover:bg-accent-600 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg transition-all"
-          >
-            Launch Picker →
-          </Link>
-          <a
-            href="#demo"
-            className="bg-card hover:bg-card-hover border border-primary-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-bold text-base sm:text-lg transition-all"
-          >
-            See Demo
-          </a>
+
+        {/* Two Column Tool Showcase */}
+        <div className="grid md:grid-cols-2 gap-6 mb-12 max-w-5xl mx-auto">
+          {/* Team Picker Tool */}
+          <div className="bg-gradient-to-br from-accent/10 to-accent/5 border-2 border-accent rounded-xl p-6 sm:p-8 hover:border-accent-400 transition-all">
+            <div className="text-4xl mb-4">🎯</div>
+            <h3 className="text-2xl font-bold text-white mb-3">Team Picker</h3>
+            <p className="text-primary-300 mb-6">
+              Find your perfect dynasty challenge from 136 FBS teams with smart filters and categories.
+            </p>
+            <Link
+              to="/picker"
+              className="inline-block w-full bg-accent hover:bg-accent-600 px-6 py-3 rounded-lg font-bold text-center transition-all"
+            >
+              Launch Picker →
+            </Link>
+          </div>
+
+          {/* Conference Builder Tool */}
+          <div className="bg-gradient-to-br from-highlight/10 to-highlight/5 border-2 border-highlight rounded-xl p-6 sm:p-8 hover:border-highlight-400 transition-all">
+            <div className="text-4xl mb-4">🏗️</div>
+            <h3 className="text-2xl font-bold text-white mb-3">Conference Builder</h3>
+            <p className="text-primary-300 mb-6">
+              Create custom conferences with drag-and-drop. Add divisions, export, and build your dream setup.
+            </p>
+            <Link
+              to="/conference-builder"
+              className="inline-block w-full bg-highlight hover:bg-highlight-600 text-black px-6 py-3 rounded-lg font-bold text-center transition-all"
+            >
+              Build Conference →
+            </Link>
+          </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-12 sm:mt-16 max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 max-w-4xl mx-auto">
           {stats.map((stat, i) => (
             <div key={i} className="bg-card border border-primary-900 rounded-lg p-4 sm:p-6 hover:border-accent transition-colors">
               <div className="text-2xl sm:text-3xl font-bold text-accent">{stat.value}</div>
@@ -268,7 +301,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
             {/* About */}
             <div className="text-center md:text-left">
-              <h3 className="text-white font-bold text-lg mb-3">CFB Dynasty Picker</h3>
+              <h3 className="text-white font-bold text-lg mb-3">CFB Dynasty Tools</h3>
               <p className="text-sm text-primary-400 mb-3">
                 Find your perfect college football dynasty team
               </p>
@@ -337,10 +370,10 @@ export default function LandingPage() {
             </p>
           </div>
           
-          {/* Copyright */}
+          {/* Feature Note */}
           <div className="mt-3 sm:mt-4">
             <p className="text-primary-600 text-xs text-center">
-              © {new Date().getFullYear()} CFB Dynasty Picker • Fan Project
+              Now featuring Custom Conference Builder • Create your own conferences with drag-and-drop
             </p>
           </div>
         </div>
