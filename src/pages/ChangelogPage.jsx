@@ -3,6 +3,25 @@ import { Link } from 'react-router-dom'
 export default function ChangelogPage() {
   const changes = [
     {
+      date: 'October 30, 2025',
+      version: 'v1.0.3',
+      title: 'Multi-Conference Builder & UX Improvements',
+      items: [
+        'NEW: Build multiple conferences simultaneously with tab-based switching',
+        'Select from real FBS conference names (SEC, Big 12, Big Ten, ACC, etc.)',
+        'Switch between conferences without losing progress - all work saved automatically',
+        'Replaced drag-and-drop with simple click-to-add team selection',
+        'Added EA Sports CFB minimum requirement (4 teams per conference)',
+        'Export validation prevents incomplete conferences (<4 teams) from being exported',
+        'Visual warning indicators (⚠️) on conferences with less than 4 teams',
+        'NEW: "Clear All" button to quickly delete all conferences and start fresh',
+        'Active conference tabs show team counts and allow quick switching',
+        'Teams used in one conference are automatically removed from available pool',
+        'Export individual conferences or use "Export All" for bulk download',
+        'Improved tips section with updated workflow guidance',
+      ]
+    },
+    {
       date: 'October 29, 2025',
       version: 'v1.0.2',
       title: 'Conference Builder & Major Updates',

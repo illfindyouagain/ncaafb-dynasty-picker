@@ -4,61 +4,129 @@ import { useTeams } from '../hooks/useTeams'
 
 export default function ConferenceBuilderPage() {
   const { teams, loading, error } = useTeams()
-  const [conferenceName, setConferenceName] = useState('My Custom Conference')
-  const [conferenceTeams, setConferenceTeams] = useState([])
+  const [selectedConferenceName, setSelectedConferenceName] = useState('') // Which conference currently viewing
+  const [activeConferences, setActiveConferences] = useState({}) // Object storing all conferences being built
   const [searchQuery, setSearchQuery] = useState('')
   const [conferenceFilter, setConferenceFilter] = useState('all')
-  const [draggedTeam, setDraggedTeam] = useState(null)
-  const [useDivisions, setUseDivisions] = useState(false)
-  const [division1Name, setDivision1Name] = useState('East')
-  const [division2Name, setDivision2Name] = useState('West')
 
+  // Real FBS conference names
+  const realConferences = [...new Set(teams.map(t => t.conference))].sort()
   const conferences = [...new Set(teams.map(t => t.conference))].sort()
 
+  // Get current conference data
+  const currentConference = selectedConferenceName ? activeConferences[selectedConferenceName] || {
+    teams: [],
+    useDivisions: false,
+    division1Name: 'East',
+    division2Name: 'West'
+  } : { teams: [], useDivisions: false, division1Name: 'East', division2Name: 'West' }
+
+  const conferenceTeams = currentConference.teams
+  const useDivisions = currentConference.useDivisions
+  const division1Name = currentConference.division1Name
+  const division2Name = currentConference.division2Name
+
+  // Get all teams used across ALL conferences being built
+  const usedTeams = Object.values(activeConferences).flatMap(conf => conf.teams.map(t => t.id))
+
   const availableTeams = teams.filter(team => {
-    if (conferenceTeams.find(t => t.id === team.id)) return false
+    if (usedTeams.includes(team.id)) return false // Filter out teams used in any conference
     if (searchQuery && !team.name.toLowerCase().includes(searchQuery.toLowerCase())) return false
     if (conferenceFilter !== 'all' && team.conference !== conferenceFilter) return false
     return true
   })
 
-  const handleDragStart = (team) => {
-    setDraggedTeam(team)
-  }
-
-  const handleDragOver = (e) => {
-    e.preventDefault()
-  }
-
-  const handleDrop = () => {
-    if (draggedTeam && conferenceTeams.length < 16) {
-      // Check if team already exists
-      if (conferenceTeams.find(t => t.id === draggedTeam.id)) {
-        return // Silently ignore duplicate
+  // Update current conference in activeConferences
+  const updateCurrentConference = (updates) => {
+    if (!selectedConferenceName) return
+    setActiveConferences({
+      ...activeConferences,
+      [selectedConferenceName]: {
+        ...currentConference,
+        ...updates
       }
-      setConferenceTeams([...conferenceTeams, { ...draggedTeam, division: null }])
-      setDraggedTeam(null)
+    })
+  }
+
+  const addTeamToConference = (team) => {
+    if (!selectedConferenceName) {
+      alert('Please select a conference first!')
+      return
     }
+    if (conferenceTeams.length >= 16) {
+      alert('Maximum 16 teams per conference!')
+      return
+    }
+    // Check if team already exists
+    if (conferenceTeams.find(t => t.id === team.id)) {
+      return // Silently ignore duplicate
+    }
+    updateCurrentConference({
+      teams: [...conferenceTeams, { ...team, division: null }]
+    })
   }
 
   const moveTeamToDivision = (teamId, division) => {
-    setConferenceTeams(conferenceTeams.map(t => 
-      t.id === teamId ? { ...t, division } : t
-    ))
+    updateCurrentConference({
+      teams: conferenceTeams.map(t => 
+        t.id === teamId ? { ...t, division } : t
+      )
+    })
   }
 
   const removeTeam = (teamId) => {
-    setConferenceTeams(conferenceTeams.filter(t => t.id !== teamId))
+    updateCurrentConference({
+      teams: conferenceTeams.filter(t => t.id !== teamId)
+    })
   }
 
   const clearAll = () => {
-    if (confirm('Clear all teams?')) {
-      setConferenceTeams([])
-      setUseDivisions(false)
+    if (confirm('Clear all teams from this conference?')) {
+      updateCurrentConference({
+        teams: [],
+        useDivisions: false
+      })
+    }
+  }
+
+  const deleteConference = (confName) => {
+    if (confirm(`Delete ${confName} and all its teams?`)) {
+      const newConfs = { ...activeConferences }
+      delete newConfs[confName]
+      setActiveConferences(newConfs)
+      if (selectedConferenceName === confName) {
+        setSelectedConferenceName('')
+      }
+    }
+  }
+
+  const clearAllConferences = () => {
+    const conferenceCount = Object.keys(activeConferences).length
+    const teamCount = Object.values(activeConferences).reduce((sum, conf) => sum + conf.teams.length, 0)
+    
+    if (confirm(`Are you sure you want to delete all ${conferenceCount} conference(s) and ${teamCount} team(s)?\n\nThis cannot be undone!`)) {
+      setActiveConferences({})
+      setSelectedConferenceName('')
     }
   }
 
   const exportConference = () => {
+    if (conferenceTeams.length === 0) {
+      alert('Add some teams to your conference first!')
+      return
+    }
+
+    if (!selectedConferenceName) {
+      alert('Please select a conference name first!')
+      return
+    }
+
+    // Check for minimum teams (EA Sports CFB requires minimum 4 teams)
+    if (conferenceTeams.length < 4) {
+      alert(`⚠️ EA Sports CFB requires at least 4 teams per conference.\n\nYou currently have ${conferenceTeams.length} team(s). Please add ${4 - conferenceTeams.length} more team(s) before exporting.`)
+      return
+    }
+
     // Check for unassigned teams when divisions are enabled
     if (useDivisions) {
       const unassignedTeams = conferenceTeams.filter(t => !t.division)
@@ -71,12 +139,13 @@ export default function ConferenceBuilderPage() {
     }
 
     const data = {
-      name: conferenceName,
+      name: selectedConferenceName,
       divisions: useDivisions ? {
         division1: division1Name,
         division2: division2Name
       } : null,
       teams: conferenceTeams.map(t => ({
+        id: t.id,
         name: t.name,
         conference: t.conference,
         location: t.location,
@@ -90,8 +159,56 @@ export default function ConferenceBuilderPage() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `${conferenceName.replace(/\s+/g, '-').toLowerCase()}.json`
+    a.download = `${selectedConferenceName.replace(/\s+/g, '-').toLowerCase()}.json`
     a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const exportAllConferences = () => {
+    const conferenceList = Object.keys(activeConferences)
+    if (conferenceList.length === 0) {
+      alert('Build some conferences first!')
+      return
+    }
+
+    // Check if any conference has less than 4 teams
+    const incompleteConferences = conferenceList.filter(name => activeConferences[name].teams.length < 4)
+    if (incompleteConferences.length > 0) {
+      const confDetails = incompleteConferences.map(name => 
+        `${name} (${activeConferences[name].teams.length} teams)`
+      ).join('\n')
+      alert(`⚠️ EA Sports CFB requires at least 4 teams per conference.\n\nThe following conferences need more teams:\n${confDetails}\n\nPlease add more teams before exporting.`)
+      return
+    }
+
+    const allData = conferenceList.map(confName => {
+      const conf = activeConferences[confName]
+      return {
+        name: confName,
+        divisions: conf.useDivisions ? {
+          division1: conf.division1Name,
+          division2: conf.division2Name
+        } : null,
+        teams: conf.teams.map(t => ({
+          id: t.id,
+          name: t.name,
+          conference: t.conference,
+          location: t.location,
+          stars: t.stars,
+          stadium: t.stadium_name,
+          capacity: t.stadium_capacity,
+          division: conf.useDivisions ? t.division : null
+        }))
+      }
+    })
+
+    const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `all-conferences-${Date.now()}.json`
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   if (loading) {
@@ -126,22 +243,106 @@ export default function ConferenceBuilderPage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-7xl mx-auto p-4 md:p-8">
-        <div className="mb-6">
-          <Link to="/" className="text-accent hover:text-accent-400 transition-colors mb-4 inline-block">
-             Back to Home
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold mb-2"> Conference Builder</h1>
-          <p className="text-primary-400">Drag and drop teams to create your custom conference</p>
+        <div className="mb-6 flex justify-between items-start">
+          <div>
+            <Link to="/" className="text-accent hover:text-accent-400 transition-colors mb-4 inline-block">
+              ← Back to Home
+            </Link>
+            <h1 className="text-4xl md:text-5xl font-bold mb-2">🏗️ Conference Builder</h1>
+            <p className="text-primary-400">Build multiple conferences - switch between them without losing progress</p>
+          </div>
+          {Object.keys(activeConferences).length > 0 && (
+            <div className="flex gap-3">
+              <button
+                onClick={clearAllConferences}
+                className="bg-red-900 hover:bg-red-800 text-white px-6 py-3 rounded-lg font-bold transition-colors"
+              >
+                🗑️ Clear All
+              </button>
+              <button
+                onClick={exportAllConferences}
+                className="bg-highlight hover:bg-highlight-600 text-black px-6 py-3 rounded-lg font-bold transition-colors"
+              >
+                📥 Export All ({Object.keys(activeConferences).length})
+              </button>
+            </div>
+          )}
         </div>
 
+        {/* Active Conferences Tabs */}
+        {Object.keys(activeConferences).length > 0 && (
+          <div className="bg-gradient-to-r from-highlight/10 to-accent/10 border border-highlight/30 rounded-lg p-4 mb-6">
+            <div>
+              <h3 className="font-bold text-lg mb-3">📋 Active Conferences ({Object.keys(activeConferences).length})</h3>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {Object.keys(activeConferences).map(confName => {
+                  const conf = activeConferences[confName]
+                  const isActive = selectedConferenceName === confName
+                  const needsMoreTeams = conf.teams.length < 4
+                  return (
+                    <div key={confName} className={`border rounded-lg px-4 py-2 flex items-center gap-3 transition-all ${
+                      isActive 
+                        ? 'bg-accent text-black border-accent font-bold' 
+                        : 'bg-black/50 border-gray-700 hover:border-accent cursor-pointer'
+                    }`}
+                    onClick={() => setSelectedConferenceName(confName)}
+                    >
+                      <span className="text-sm flex items-center gap-1">
+                        {needsMoreTeams && <span className={isActive ? 'text-yellow-700' : 'text-yellow-500'}>⚠️</span>}
+                        {confName} <span className="opacity-70">({conf.teams.length})</span>
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          deleteConference(confName)
+                        }}
+                        className={`font-bold transition-colors ${
+                          isActive ? 'text-black hover:text-red-700' : 'text-red-500 hover:text-red-400'
+                        }`}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="text-sm text-primary-400">
+                {usedTeams.length} teams used • {136 - usedTeams.length} remaining
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-card rounded-lg p-4 mb-6">
-          <input
-            type="text"
-            value={conferenceName}
-            onChange={(e) => setConferenceName(e.target.value)}
+          <label className="block text-sm text-primary-400 mb-2 font-semibold">Select Conference to Build:</label>
+          <select
+            value={selectedConferenceName}
+            onChange={(e) => {
+              const confName = e.target.value
+              setSelectedConferenceName(confName)
+              // Initialize conference if it doesn't exist
+              if (confName && !activeConferences[confName]) {
+                setActiveConferences({
+                  ...activeConferences,
+                  [confName]: {
+                    teams: [],
+                    useDivisions: false,
+                    division1Name: 'East',
+                    division2Name: 'West'
+                  }
+                })
+              }
+            }}
             className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white text-2xl font-bold focus:border-accent focus:outline-none"
-            placeholder="Conference Name"
-          />
+          >
+            <option value="">-- Choose a Conference --</option>
+            {realConferences.map(conf => (
+              <option key={conf} value={conf}>{conf}</option>
+            ))}
+          </select>
+          {!selectedConferenceName && (
+            <p className="text-sm text-primary-500 mt-2">Select a conference name to start building your custom roster</p>
+          )}
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
@@ -170,16 +371,15 @@ export default function ConferenceBuilderPage() {
               {availableTeams.map(team => (
                 <div
                   key={team.id}
-                  draggable
-                  onDragStart={() => handleDragStart(team)}
-                  className="bg-black border border-gray-800 rounded-lg p-4 cursor-move hover:border-accent transition-colors"
+                  onClick={() => addTeamToConference(team)}
+                  className="bg-black border border-gray-800 rounded-lg p-4 cursor-pointer hover:border-accent hover:bg-gray-900 transition-colors"
                 >
                   <div className="font-bold text-lg mb-1">{team.name}</div>
                   <div className="text-sm text-gray-400 space-y-1">
-                    <div> {team.stars} Stars  {team.conference}</div>
-                    <div> {team.location}</div>
+                    <div>⭐ {team.stars} Stars • 🏟️ {team.conference}</div>
+                    <div>📍 {team.location}</div>
                     {team.stadium_name && (
-                      <div> {team.stadium_name} ({team.stadium_capacity?.toLocaleString()})</div>
+                      <div>🏟️ {team.stadium_name} ({team.stadium_capacity?.toLocaleString()})</div>
                     )}
                   </div>
                 </div>
@@ -192,21 +392,30 @@ export default function ConferenceBuilderPage() {
 
           <div className="bg-card rounded-lg p-6 lg:col-span-2">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">{conferenceName} ({conferenceTeams.length}/16)</h2>
-              <div className="flex gap-2">
-                {conferenceTeams.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-bold">
+                  {selectedConferenceName || 'Select Conference'} ({conferenceTeams.length}/16)
+                </h2>
+                {selectedConferenceName && conferenceTeams.length > 0 && conferenceTeams.length < 4 && (
+                  <p className="text-yellow-500 text-sm mt-1">
+                    ⚠️ Need {4 - conferenceTeams.length} more team(s) to meet EA Sports CFB minimum (4 teams)
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                {conferenceTeams.length > 0 && selectedConferenceName && (
                   <>
                     <button
                       onClick={exportConference}
                       className="bg-accent hover:bg-accent-600 text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm"
                     >
-                       Export
+                      📥 Export
                     </button>
                     <button
                       onClick={clearAll}
                       className="bg-red-900 hover:bg-red-800 text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm"
                     >
-                       Clear
+                      🗑️ Clear
                     </button>
                   </>
                 )}
@@ -221,11 +430,10 @@ export default function ConferenceBuilderPage() {
                     checked={useDivisions}
                     onChange={(e) => {
                       const enabled = e.target.checked
-                      setUseDivisions(enabled)
-                      if (!enabled) {
-                        // Clear all division assignments when disabling
-                        setConferenceTeams(conferenceTeams.map(t => ({ ...t, division: null })))
-                      }
+                      updateCurrentConference({
+                        useDivisions: enabled,
+                        teams: enabled ? conferenceTeams : conferenceTeams.map(t => ({ ...t, division: null }))
+                      })
                     }}
                     className="w-5 h-5 accent-accent cursor-pointer"
                   />
@@ -236,14 +444,14 @@ export default function ConferenceBuilderPage() {
                     <input
                       type="text"
                       value={division1Name}
-                      onChange={(e) => setDivision1Name(e.target.value)}
+                      onChange={(e) => updateCurrentConference({ division1Name: e.target.value })}
                       className="bg-black border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-accent focus:outline-none"
                       placeholder="Division 1 Name"
                     />
                     <input
                       type="text"
                       value={division2Name}
-                      onChange={(e) => setDivision2Name(e.target.value)}
+                      onChange={(e) => updateCurrentConference({ division2Name: e.target.value })}
                       className="bg-black border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-accent focus:outline-none"
                       placeholder="Division 2 Name"
                     />
@@ -253,8 +461,6 @@ export default function ConferenceBuilderPage() {
             )}
 
             <div
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
               className={`min-h-[600px] border-2 border-dashed rounded-lg p-4 transition-colors ${
                 conferenceTeams.length === 0 ? 'border-gray-700 bg-black/50' : 'border-gray-800 bg-black'
               }`}
@@ -262,9 +468,9 @@ export default function ConferenceBuilderPage() {
               {conferenceTeams.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center text-gray-400">
-                    <div className="text-6xl mb-4"></div>
-                    <p className="text-lg">Drag teams here to build your conference</p>
-                    <p className="text-sm mt-2">Maximum 16 teams</p>
+                    <div className="text-6xl mb-4">👈</div>
+                    <p className="text-lg">Click teams on the left to add them to your conference</p>
+                    <p className="text-sm mt-2">4-16 teams per conference (EA Sports CFB requirement)</p>
                   </div>
                 </div>
               ) : (
@@ -332,13 +538,16 @@ export default function ConferenceBuilderPage() {
         </div>
 
         <div className="mt-6 bg-card rounded-lg p-6">
-          <h3 className="font-bold mb-2"> Tips:</h3>
+          <h3 className="font-bold mb-2">💡 Tips:</h3>
           <ul className="text-sm text-gray-400 space-y-1">
-            <li> Drag teams from the left to the right to add them to your conference</li>
-            <li> Click the  button to remove a team from your conference</li>
-            <li> Maximum 16 teams per conference</li>
-            <li> With 8+ teams, you can enable divisions (East/West, North/South, etc.)</li>
-            <li> Export your conference as a JSON file to save it</li>
+            <li>📋 Select a conference from the dropdown to start building</li>
+            <li>👆 Click teams on the left to add them to your conference</li>
+            <li>🔄 Switch between conferences using the dropdown or tabs - your work is saved automatically</li>
+            <li>❌ Click × on a team to remove it, or × on a conference tab to delete the whole conference</li>
+            <li>📊 Each conference needs 4-16 teams (EA Sports CFB requirement)</li>
+            <li>➗ With 8+ teams, you can enable divisions (East/West, North/South, etc.)</li>
+            <li>📥 Export individual conferences or use "Export All" to download all at once</li>
+            <li>⚠️ Your work is lost on page refresh - export when finished!</li>
           </ul>
         </div>
       </div>

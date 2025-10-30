@@ -63,7 +63,11 @@ export default function AboutPage() {
               <p>Can't decide? Hit the Random Pick button to let fate choose your next dynasty team based on your active filters.</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">5. Exclude Teams</h3>
+              <h3 className="text-lg font-semibold text-white mb-2">5. Build Custom Conferences</h3>
+              <p>Create multiple custom conferences with real FBS conference names. Build all conferences simultaneously, switch between them, and export when ready. Each conference needs 4-16 teams to meet EA Sports CFB requirements.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-2">6. Exclude Teams</h3>
               <p>Already played with a team? Exclude them from future random picks so you always get fresh options.</p>
             </div>
           </div>
