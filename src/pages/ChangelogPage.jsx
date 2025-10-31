@@ -3,6 +3,23 @@ import { Link } from 'react-router-dom'
 export default function ChangelogPage() {
   const changes = [
     {
+      date: 'October 31, 2025',
+      version: 'v1.0.4',
+      title: 'Auto-Save & UX Polish',
+      items: [
+        'NEW: Auto-save for Conference Builder - work survives page refresh!',
+        'NEW: Uniform header navigation across all pages',
+        'NEW: "Clear All Filters" button in Team Picker with team count display',
+        'NEW: "Clear Selection" button when a team is selected',
+        'FIXED: Division export validation - prevents exporting with empty divisions',
+        'FIXED: Search query now clears when switching conferences',
+        'FIXED: Empty conferences no longer export in "Export All"',
+        'IMPROVED: Team count prominently displayed in Picker sorting controls',
+        'IMPROVED: Better UX consistency across all tools',
+        'IMPROVED: localStorage integration preserves Conference Builder work',
+      ]
+    },
+    {
       date: 'October 30, 2025',
       version: 'v1.0.3',
       title: 'Multi-Conference Builder & UX Improvements',

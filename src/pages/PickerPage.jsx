@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTeams } from '../hooks/useTeams'
+import Header from '../components/Header'
 
 export default function PickerPage() {
   const { teams, loading, error } = useTeams()
@@ -175,25 +176,7 @@ export default function PickerPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="border-b border-primary-900 bg-black sticky top-0 z-50 backdrop-blur-sm bg-opacity-95">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
-              <div className="text-2xl sm:text-3xl">🏈</div>
-              <h1 className="text-xl sm:text-2xl font-bold text-white">
-                CFB Dynasty Tools
-              </h1>
-            </Link>
-            <Link
-              to="/"
-              className="text-sm sm:text-base text-primary-300 hover:text-white transition-colors"
-            >
-              ← Back
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* NEW: Search Bar */}
@@ -249,12 +232,15 @@ export default function PickerPage() {
             </button>
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <div className="text-sm text-primary-400">
+              <span className="font-bold text-accent">{sortedTeams.length}</span> {sortedTeams.length === 1 ? 'team' : 'teams'} found
+            </div>
             <button
               onClick={resetFilters}
-              className="px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors text-sm"
+              className="px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors text-sm font-semibold"
             >
-              Clear All Filters
+              🗑️ Clear All Filters
             </button>
           </div>
         </div>
@@ -264,7 +250,7 @@ export default function PickerPage() {
           <div ref={selectedTeamRef} className="mb-6 sm:mb-8 bg-card border-2 border-accent rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl">
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
                   <div className="inline-block px-3 py-1 bg-highlight/20 border border-highlight rounded-full text-highlight text-xs sm:text-sm font-medium">
                     Your Dynasty Pick
                   </div>
@@ -277,6 +263,12 @@ export default function PickerPage() {
                     }`}
                   >
                     {excludedTeams.includes(selectedTeam.id) ? '✓ Excluded' : 'Exclude from Results'}
+                  </button>
+                  <button
+                    onClick={() => setSelectedTeam(null)}
+                    className="px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-colors bg-primary-900 border border-primary-800 text-primary-300 hover:border-accent hover:text-accent"
+                  >
+                    Clear Selection ✕
                   </button>
                 </div>
                 <div className="flex items-center gap-3 sm:gap-4 mb-2">
@@ -300,12 +292,6 @@ export default function PickerPage() {
                   </p>
                 )}
               </div>
-              <button
-                onClick={() => setSelectedTeam(null)}
-                className="text-primary-400 hover:text-white text-xl sm:text-2xl flex-shrink-0 ml-2 transition-colors"
-              >
-                ×
-              </button>
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mt-4 sm:mt-6">

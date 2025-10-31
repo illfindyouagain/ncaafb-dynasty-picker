@@ -1,6 +1,7 @@
-﻿import { useState } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTeams } from '../hooks/useTeams'
+import Header from '../components/Header'
 
 export default function ConferenceBuilderPage() {
   const { teams, loading, error } = useTeams()
@@ -8,6 +9,42 @@ export default function ConferenceBuilderPage() {
   const [activeConferences, setActiveConferences] = useState({}) // Object storing all conferences being built
   const [searchQuery, setSearchQuery] = useState('')
   const [conferenceFilter, setConferenceFilter] = useState('all')
+
+  // Auto-save to localStorage
+  useEffect(() => {
+    if (Object.keys(activeConferences).length > 0) {
+      localStorage.setItem('activeConferences', JSON.stringify(activeConferences))
+      console.log('💾 Auto-saved conferences to localStorage')
+    }
+  }, [activeConferences])
+
+  useEffect(() => {
+    if (selectedConferenceName) {
+      localStorage.setItem('selectedConference', selectedConferenceName)
+    }
+  }, [selectedConferenceName])
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const savedConferences = localStorage.getItem('activeConferences')
+    const savedSelection = localStorage.getItem('selectedConference')
+    
+    if (savedConferences) {
+      try {
+        const parsed = JSON.parse(savedConferences)
+        if (Object.keys(parsed).length > 0) {
+          setActiveConferences(parsed)
+          console.log('📂 Loaded saved conferences from localStorage')
+        }
+      } catch (e) {
+        console.error('Failed to load saved conferences', e)
+      }
+    }
+    
+    if (savedSelection) {
+      setSelectedConferenceName(savedSelection)
+    }
+  }, []) // Empty dependency array = only run once on mount
 
   // Real FBS conference names
   const realConferences = [...new Set(teams.map(t => t.conference))].sort()
@@ -107,6 +144,8 @@ export default function ConferenceBuilderPage() {
     if (confirm(`Are you sure you want to delete all ${conferenceCount} conference(s) and ${teamCount} team(s)?\n\nThis cannot be undone!`)) {
       setActiveConferences({})
       setSelectedConferenceName('')
+      localStorage.removeItem('activeConferences')
+      localStorage.removeItem('selectedConference')
     }
   }
 
@@ -129,7 +168,16 @@ export default function ConferenceBuilderPage() {
 
     // Check for unassigned teams when divisions are enabled
     if (useDivisions) {
+      const div1Teams = conferenceTeams.filter(t => t.division === 1)
+      const div2Teams = conferenceTeams.filter(t => t.division === 2)
       const unassignedTeams = conferenceTeams.filter(t => !t.division)
+      
+      // Check if both divisions have at least one team
+      if (div1Teams.length === 0 || div2Teams.length === 0) {
+        alert(`⚠️ Both divisions must have at least one team.\n\n${division1Name}: ${div1Teams.length} team(s)\n${division2Name}: ${div2Teams.length} team(s)\n\nPlease assign teams to both divisions before exporting.`)
+        return
+      }
+      
       if (unassignedTeams.length > 0) {
         const teamNames = unassignedTeams.map(t => t.name).join(', ')
         if (!confirm(`Warning: ${unassignedTeams.length} team(s) not assigned to a division:\n${teamNames}\n\nExport anyway?`)) {
@@ -165,7 +213,11 @@ export default function ConferenceBuilderPage() {
   }
 
   const exportAllConferences = () => {
-    const conferenceList = Object.keys(activeConferences)
+    // Filter out empty conferences
+    const conferenceList = Object.keys(activeConferences).filter(name => 
+      activeConferences[name].teams && activeConferences[name].teams.length > 0
+    )
+    
     if (conferenceList.length === 0) {
       alert('Build some conferences first!')
       return
@@ -242,6 +294,8 @@ export default function ConferenceBuilderPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <Header />
+      
       <div className="max-w-7xl mx-auto p-4 md:p-8">
         <div className="mb-6 flex justify-between items-start">
           <div>
@@ -320,6 +374,7 @@ export default function ConferenceBuilderPage() {
             onChange={(e) => {
               const confName = e.target.value
               setSelectedConferenceName(confName)
+              setSearchQuery('') // Clear search when switching conferences
               // Initialize conference if it doesn't exist
               if (confName && !activeConferences[confName]) {
                 setActiveConferences({
@@ -543,11 +598,11 @@ export default function ConferenceBuilderPage() {
             <li>📋 Select a conference from the dropdown to start building</li>
             <li>👆 Click teams on the left to add them to your conference</li>
             <li>🔄 Switch between conferences using the dropdown or tabs - your work is saved automatically</li>
+            <li>💾 Auto-save enabled! Your work survives page refresh</li>
             <li>❌ Click × on a team to remove it, or × on a conference tab to delete the whole conference</li>
             <li>📊 Each conference needs 4-16 teams (EA Sports CFB requirement)</li>
             <li>➗ With 8+ teams, you can enable divisions (East/West, North/South, etc.)</li>
             <li>📥 Export individual conferences or use "Export All" to download all at once</li>
-            <li>⚠️ Your work is lost on page refresh - export when finished!</li>
           </ul>
         </div>
       </div>
