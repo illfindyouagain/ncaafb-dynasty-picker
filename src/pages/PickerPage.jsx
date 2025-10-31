@@ -32,7 +32,7 @@ export default function PickerPage() {
     
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Pick your perfect EA Sports College Football 25 dynasty team from 136 FBS teams. Filter by conference, difficulty, prestige, stars, and more. Export your picks and exclude teams you\'ve already played.')
+      metaDescription.setAttribute('content', 'Pick your perfect NCAA Football 26 dynasty team from 136 FBS teams. Filter by conference, difficulty, prestige, stars, and more. Export your picks and exclude teams you\'ve already played.')
     }
     
     const ogTitle = document.querySelector('meta[property="og:title"]')
@@ -47,7 +47,7 @@ export default function PickerPage() {
     
     const ogDescription = document.querySelector('meta[property="og:description"]')
     if (ogDescription) {
-      ogDescription.setAttribute('content', 'Pick your perfect EA Sports College Football 25 dynasty team from 136 FBS teams. Advanced filters, sorting, and random pick features.')
+      ogDescription.setAttribute('content', 'Pick your perfect NCAA Football 26 dynasty team from 136 FBS teams. Advanced filters, sorting, and random pick features.')
     }
   }, [])
 

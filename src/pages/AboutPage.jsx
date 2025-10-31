@@ -8,7 +8,7 @@ export default function AboutPage() {
     
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Learn how to use CFB Dynasty Tools for EA Sports College Football 25. FAQs, feature explanations, donation info, and tool guides for Team Picker and Conference Builder.')
+      metaDescription.setAttribute('content', 'Learn how to use CFB Dynasty Tools for NCAA Football 26. FAQs, feature explanations, donation info, and tool guides for Team Picker and Conference Builder.')
     }
     
     const ogTitle = document.querySelector('meta[property="og:title"]')

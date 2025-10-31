@@ -16,7 +16,7 @@ export default function ConferenceBuilderPage() {
     
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Build custom conferences for EA Sports College Football 25. Create multiple conferences simultaneously, add 4-16 teams, organize divisions, export as JSON. Auto-save feature preserves your work.')
+      metaDescription.setAttribute('content', 'Build custom conferences for NCAA Football 26. Create multiple conferences simultaneously, add 4-16 teams, organize divisions, export as JSON. Auto-save feature preserves your work.')
     }
     
     const ogTitle = document.querySelector('meta[property="og:title"]')
@@ -31,7 +31,7 @@ export default function ConferenceBuilderPage() {
     
     const ogDescription = document.querySelector('meta[property="og:description"]')
     if (ogDescription) {
-      ogDescription.setAttribute('content', 'Build custom conferences for EA Sports College Football 25. Drag and drop teams, create divisions, export your perfect conference setup.')
+      ogDescription.setAttribute('content', 'Build custom conferences for NCAA Football 26. Click to add teams, create divisions, export your perfect conference setup.')
     }
   }, [])
 
