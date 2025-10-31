@@ -1,5 +1,19 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
+Allow: /picker
+Allow: /conference-builder
+Allow: /about
+Allow: /changelog
+Allow: /privacy
 
+# Disallow admin or API routes (for future use)
+Disallow: /api/
+Disallow: /_next/
+Disallow: /.git/
+
+# Crawl-delay to help with server load
+Crawl-delay: 1
+
+# Sitemap
 Sitemap: https://liftoffgaming.com/sitemap.xml

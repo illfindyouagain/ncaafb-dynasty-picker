@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useTeams } from '../hooks/useTeams'
 import Header from '../components/Header'
@@ -25,6 +25,31 @@ export default function PickerPage() {
   const [starRange, setStarRange] = useState({ min: 0, max: 5 })
   const [ratingRange, setRatingRange] = useState({ min: 0, max: 99 })
   const [excludedTeams, setExcludedTeams] = useState([])
+
+  // Set page-specific meta tags for SEO
+  useEffect(() => {
+    document.title = 'Team Picker - CFB Dynasty Tools | Find Your Perfect Dynasty Team'
+    
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Pick your perfect EA Sports College Football 25 dynasty team from 136 FBS teams. Filter by conference, difficulty, prestige, stars, and more. Export your picks and exclude teams you\'ve already played.')
+    }
+    
+    const ogTitle = document.querySelector('meta[property="og:title"]')
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 'Team Picker - CFB Dynasty Tools')
+    }
+    
+    const ogUrl = document.querySelector('meta[property="og:url"]')
+    if (ogUrl) {
+      ogUrl.setAttribute('content', 'https://liftoffgaming.com/picker')
+    }
+    
+    const ogDescription = document.querySelector('meta[property="og:description"]')
+    if (ogDescription) {
+      ogDescription.setAttribute('content', 'Pick your perfect EA Sports College Football 25 dynasty team from 136 FBS teams. Advanced filters, sorting, and random pick features.')
+    }
+  }, [])
 
   const filteredTeams = useMemo(() => {
     return teams.filter(team => {

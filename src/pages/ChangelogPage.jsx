@@ -1,6 +1,27 @@
 import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
 
 export default function ChangelogPage() {
+  // Set page-specific meta tags for SEO
+  useEffect(() => {
+    document.title = 'Changelog - CFB Dynasty Tools | Updates and Version History'
+    
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Track all updates, improvements, and new features added to CFB Dynasty Tools. See version history from v1.0.0 to current release with detailed changelogs.')
+    }
+    
+    const ogTitle = document.querySelector('meta[property="og:title"]')
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 'Changelog - CFB Dynasty Tools')
+    }
+    
+    const ogUrl = document.querySelector('meta[property="og:url"]')
+    if (ogUrl) {
+      ogUrl.setAttribute('content', 'https://liftoffgaming.com/changelog')
+    }
+  }, [])
+
   const changes = [
     {
       date: 'October 31, 2025',

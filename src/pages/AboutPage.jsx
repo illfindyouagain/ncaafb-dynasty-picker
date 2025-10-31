@@ -1,6 +1,27 @@
 import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
 
 export default function AboutPage() {
+  // Set page-specific meta tags for SEO
+  useEffect(() => {
+    document.title = 'About & FAQ - CFB Dynasty Tools | Learn How to Use Our Tools'
+    
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Learn how to use CFB Dynasty Tools for EA Sports College Football 25. FAQs, feature explanations, donation info, and tool guides for Team Picker and Conference Builder.')
+    }
+    
+    const ogTitle = document.querySelector('meta[property="og:title"]')
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 'About & FAQ - CFB Dynasty Tools')
+    }
+    
+    const ogUrl = document.querySelector('meta[property="og:url"]')
+    if (ogUrl) {
+      ogUrl.setAttribute('content', 'https://liftoffgaming.com/about')
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-black">
       {/* Header */}

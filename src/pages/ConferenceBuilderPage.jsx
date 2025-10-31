@@ -10,6 +10,31 @@ export default function ConferenceBuilderPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [conferenceFilter, setConferenceFilter] = useState('all')
 
+  // Set page-specific meta tags for SEO
+  useEffect(() => {
+    document.title = 'Conference Builder - CFB Dynasty Tools | Build Custom Conferences'
+    
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Build custom conferences for EA Sports College Football 25. Create multiple conferences simultaneously, add 4-16 teams, organize divisions, export as JSON. Auto-save feature preserves your work.')
+    }
+    
+    const ogTitle = document.querySelector('meta[property="og:title"]')
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 'Conference Builder - CFB Dynasty Tools')
+    }
+    
+    const ogUrl = document.querySelector('meta[property="og:url"]')
+    if (ogUrl) {
+      ogUrl.setAttribute('content', 'https://liftoffgaming.com/conference-builder')
+    }
+    
+    const ogDescription = document.querySelector('meta[property="og:description"]')
+    if (ogDescription) {
+      ogDescription.setAttribute('content', 'Build custom conferences for EA Sports College Football 25. Drag and drop teams, create divisions, export your perfect conference setup.')
+    }
+  }, [])
+
   // Auto-save to localStorage
   useEffect(() => {
     if (Object.keys(activeConferences).length > 0) {
