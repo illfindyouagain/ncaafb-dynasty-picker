@@ -1,4 +1,4 @@
-// NCAA Football 26 Teams - 2025 Realignment Ready - ALL FBS TEAMS
+// NCAA Football 26 Teams - CFB 27 Teaser Teams Included (NDSU, Sacramento State)
 export const CONFERENCES = {
   BIG_TEN: 'Big Ten',
   SEC: 'SEC',
@@ -2207,6 +2207,7 @@ export const teams = [
     conference: CONFERENCES.CUSA,
     categories: [CATEGORIES.UPSTARTS, CATEGORIES.CINDERELLA_STORY],
     difficulty: DIFFICULTY.HARD,
+
     prestige: 60,
     overallRating: 60,
     offenseRating: 60,
@@ -2216,6 +2217,42 @@ export const teams = [
     colors: ['#00539F', '#FFD200'],
     stadiumName: 'Delaware Stadium',
     stadiumCapacity: 18500,
+  },
+
+  // ===== CFB 27 NEW FBS TEAMS (ratings TBD at launch) =====
+  {
+    id: 137,
+    name: 'North Dakota State',
+    conference: CONFERENCES.MWC,
+    categories: [CATEGORIES.UPSTARTS, CATEGORIES.CINDERELLA_STORY, CATEGORIES.G5_CONTENDERS],
+    difficulty: DIFFICULTY.MEDIUM,
+    prestige: 70,
+    overallRating: 72,
+    offenseRating: 70,
+    defenseRating: 74,
+    stars: 3.5,
+    location: 'Fargo, ND',
+    colors: ['#005643', '#FFC72A'],
+    stadiumName: 'Fargodome',
+    stadiumCapacity: 18700,
+    ratingsPlaceholder: true,
+  },
+  {
+    id: 138,
+    name: 'Sacramento State',
+    conference: CONFERENCES.MAC,
+    categories: [CATEGORIES.UPSTARTS, CATEGORIES.REBUILD_PROJECTS],
+    difficulty: DIFFICULTY.HARD,
+    prestige: 60,
+    overallRating: 65,
+    offenseRating: 64,
+    defenseRating: 66,
+    stars: 3,
+    location: 'Sacramento, CA',
+    colors: ['#154734', '#C4922A'],
+    stadiumName: 'Hornet Stadium',
+    stadiumCapacity: 21000,
+    ratingsPlaceholder: true,
   },
 ]
 

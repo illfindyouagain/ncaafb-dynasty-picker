@@ -38,7 +38,7 @@ export default function LandingPage() {
     { title: 'Random Dynasty Mode', description: "Can't decide? Let fate pick your next dynasty adventure", icon: '🎲' },
     { title: 'Conference Builder', description: 'Create custom conferences with click-to-add team selection and division support', icon: '🏗️' },
     { title: 'Advanced Filters', description: 'Sort and filter by overall rating, stars, prestige, and more', icon: '🏈' },
-    { title: 'All 135 FBS Teams', description: 'Complete coverage from Alabama to UMass — every team, every conference', icon: '📊' },
+    { title: '137 Teams + CFB 27 Previews', description: 'All 135 current FBS teams plus NDSU & Sacramento State previewed ahead of CFB 27', icon: '📊' },
   ]
 
   const faqs = [

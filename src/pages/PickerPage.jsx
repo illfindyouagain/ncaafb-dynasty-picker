@@ -287,6 +287,11 @@ export default function PickerPage() {
                   <div className="inline-block px-3 py-1 bg-highlight/20 border border-highlight rounded-full text-highlight text-xs sm:text-sm font-medium">
                     Your Dynasty Pick
                   </div>
+                  {selectedTeam.ratingsPlaceholder && (
+                    <div className="w-full mt-2 px-3 py-2 bg-highlight/10 border border-highlight/30 text-highlight text-xs">
+                      ⚡ <strong>CFB 27 New Addition</strong> — Ratings are estimated. Official numbers drop with NCAA Football 27 on July 9.
+                    </div>
+                  )}
                   <button
                     onClick={() => toggleExcludeTeam(selectedTeam.id)}
                     className={`px-3 py-1 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
@@ -609,6 +614,11 @@ export default function PickerPage() {
                         />
                       </div>
                       <h3 className="font-display text-lg sm:text-xl tracking-wider">{team.name}</h3>
+                      {team.ratingsPlaceholder && (
+                        <span className="ml-auto px-1.5 py-0.5 bg-highlight/20 border border-highlight/40 text-highlight text-[10px] font-bold uppercase tracking-widest flex-shrink-0">
+                          CFB 27
+                        </span>
+                      )}
                     </div>
 
                     <div className="space-y-1.5 text-xs sm:text-sm mb-3">
