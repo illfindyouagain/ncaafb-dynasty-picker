@@ -1714,7 +1714,7 @@ export const teams = [
   {
     id: 105,
     name: 'Texas State',
-    conference: CONFERENCES.SUN_BELT,
+    conference: CONFERENCES.PAC_12,
     categories: [CATEGORIES.UPSTARTS, CATEGORIES.REBUILD_PROJECTS],
     difficulty: DIFFICULTY.LEGENDARY,
     prestige: 57,
@@ -1764,7 +1764,7 @@ export const teams = [
   {
     id: 108,
     name: 'Northern Illinois',
-    conference: CONFERENCES.MAC,
+    conference: CONFERENCES.MWC,
     categories: [CATEGORIES.G5_CONTENDERS, CATEGORIES.CINDERELLA_STORY],
     difficulty: DIFFICULTY.HARD,
     prestige: 64,
@@ -1990,7 +1990,7 @@ export const teams = [
   {
     id: 122,
     name: 'Louisiana Tech',
-    conference: CONFERENCES.CUSA,
+    conference: CONFERENCES.SUN_BELT,
     categories: [CATEGORIES.G5_CONTENDERS, CATEGORIES.HISTORIC_PROGRAMS],
     difficulty: DIFFICULTY.HARD,
     prestige: 62,
@@ -2070,7 +2070,7 @@ export const teams = [
   {
     id: 127,
     name: 'UTEP',
-    conference: CONFERENCES.CUSA,
+    conference: CONFERENCES.MWC,
     categories: [CATEGORIES.REBUILD_PROJECTS],
     difficulty: DIFFICULTY.LEGENDARY,
     prestige: 56,

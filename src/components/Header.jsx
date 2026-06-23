@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'motion/react'
+import CFB27Banner from './CFB27Banner'
 
 export default function Header() {
   const { pathname } = useLocation()
@@ -24,7 +25,9 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-primary-900/60 bg-app/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 bg-app/95 backdrop-blur-sm">
+      <CFB27Banner />
+      <div className="border-b border-primary-900/60">
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-accent" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center">
@@ -52,6 +55,7 @@ export default function Header() {
             </motion.div>
           </nav>
         </div>
+      </div>
       </div>
     </header>
   )

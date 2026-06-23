@@ -26,9 +26,27 @@ export default function ChangelogPage() {
   const changes = [
     {
       date: 'June 2026',
+      date: 'June 2026',
+      version: 'v1.0.6',
+      title: 'CFB 27 Conference Updates & New Team Previews',
+      isLatest: true,
+      note: "CFB 27 drops July 9 so I'm getting ahead of the conference changes now. I'm updating what's confirmed — but some of this is still in flux (looking at you, Louisiana Tech). If a team's conference looks wrong, that's probably why. I'll do a full cleanup once the game is actually out and ratings are official.",
+      items: [
+        'NEW: North Dakota State added — joining Mountain West for CFB 27 (ratings TBD)',
+        'NEW: Sacramento State added — joining MAC for CFB 27 (ratings TBD)',
+        'MOVED: Texas State — Sun Belt → Pac-12',
+        'MOVED: Northern Illinois — MAC → Mountain West',
+        'MOVED: UTEP — C-USA → Mountain West',
+        'MOVED: Louisiana Tech — C-USA → Sun Belt (pending legal dispute with CUSA, may shift to 2027)',
+        'NEW: Site banner added noting that conference assignments are being updated for CFB 27',
+        'CFB 27 preview teams show an estimated rating badge — official numbers update July 9',
+      ]
+    },
+    {
+      date: 'June 2026',
       version: 'v1.0.5',
       title: 'Animated UI, Static Data Migration & Survival Story',
-      isLatest: true,
+      isLatest: false,
       note: "Real talk: I'm one guy, working a full-time job, building this on nights and weekends. Supabase deleted my project out from under me, which wiped the database entirely. Rather than scramble to rebuild it, I baked all 135 teams directly into the app — it actually loads faster now. I also took the opportunity to polish the UI with page transitions and motion throughout. The site isn't going anywhere.",
       items: [
         'NEW: Smooth page transitions — every route change fades and slides in cleanly',
