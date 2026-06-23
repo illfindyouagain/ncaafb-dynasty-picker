@@ -18,7 +18,7 @@ export function useAPPoll() {
         setPoll({
           name: apRanking.shortName || 'AP Top 25',
           headline: apRanking.headline || '',
-          season: apRanking.season,
+          season: apRanking.season?.year ?? apRanking.season?.displayName ?? '',
           teams: apRanking.ranks.map(r => ({
             rank: r.current,
             prev: r.previous || null,
