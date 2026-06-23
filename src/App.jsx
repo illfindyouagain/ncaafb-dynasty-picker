@@ -7,22 +7,28 @@ import RankingsPage from './pages/RankingsPage'
 import AboutPage from './pages/AboutPage'
 import ChangelogPage from './pages/ChangelogPage'
 import ConferenceBuilderPage from './pages/ConferenceBuilderPage'
+import PollTicker from './components/PollTicker'
 
 function App() {
   const location = useLocation()
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/picker" element={<PickerPage />} />
-        <Route path="/teams" element={<TeamsPage />} />
-        <Route path="/rankings" element={<RankingsPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/changelog" element={<ChangelogPage />} />
-        <Route path="/conference-builder" element={<ConferenceBuilderPage />} />
-      </Routes>
-    </AnimatePresence>
+    <>
+      <div className="pb-8">
+        <AnimatePresence mode="wait" initial={false}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/picker" element={<PickerPage />} />
+            <Route path="/teams" element={<TeamsPage />} />
+            <Route path="/rankings" element={<RankingsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/changelog" element={<ChangelogPage />} />
+            <Route path="/conference-builder" element={<ConferenceBuilderPage />} />
+          </Routes>
+        </AnimatePresence>
+      </div>
+      <PollTicker />
+    </>
   )
 }
 
