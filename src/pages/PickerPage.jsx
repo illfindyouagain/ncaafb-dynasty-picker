@@ -1,7 +1,10 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { useTeams } from '../hooks/useTeams'
 import Header from '../components/Header'
+import PageTransition from '../components/PageTransition'
+import { cardVariants, panelVariants } from '../lib/motionTokens'
 
 export default function PickerPage() {
   const { teams, loading, error } = useTeams()
@@ -93,13 +96,13 @@ export default function PickerPage() {
   const difficulties = useMemo(() => 
     [...new Set(teams.map(t => t.difficulty))]
       .sort((a, b) => {
-        const order = ['Elite', 'Hard', 'Medium', 'Easy', 'Beginner']
+        const order = ['Legendary', 'Hard', 'Medium', 'Easy']
         return order.indexOf(a) - order.indexOf(b)
       })
   , [teams])
 
   const sortedTeams = useMemo(() => {
-    const difficultyOrder = { 'Beginner': 1, 'Easy': 2, 'Medium': 3, 'Hard': 4, 'Elite': 5 }
+    const difficultyOrder = { 'Easy': 1, 'Medium': 2, 'Hard': 3, 'Legendary': 4 }
     const sorted = [...filteredTeams].sort((a, b) => {
       let comparison = 0
 
@@ -171,7 +174,7 @@ export default function PickerPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-app flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent mb-4"></div>
           <p className="text-primary-400">Loading teams...</p>
@@ -182,7 +185,7 @@ export default function PickerPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-app flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-500 mb-4">Error loading teams: {error}</p>
           <Link to="/" className="text-accent hover:text-accent-400">
@@ -193,8 +196,11 @@ export default function PickerPage() {
     )
   }
 
+  const reduce = useReducedMotion()
+
   return (
-    <div className="min-h-screen bg-black text-white">
+    <PageTransition>
+    <div className="min-h-screen bg-app text-white">
       <Header />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
@@ -264,8 +270,17 @@ export default function PickerPage() {
         </div>
 
         {/* Selected Team Display */}
+        <AnimatePresence mode="wait">
         {selectedTeam && (
-          <div ref={selectedTeamRef} className="mb-6 sm:mb-8 bg-card border-2 border-accent rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl">
+          <motion.div
+            key={selectedTeam.id}
+            ref={selectedTeamRef}
+            variants={panelVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="mb-6 sm:mb-8 bg-card border-2 border-accent rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 shadow-2xl shadow-accent/10"
+          >
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-3 flex-wrap">
@@ -300,13 +315,13 @@ export default function PickerPage() {
                       style={{ backgroundColor: selectedTeam.colors[1] }}
                     />
                   </div>
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold">{selectedTeam.name}</h2>
+                  <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl tracking-wider">{selectedTeam.name}</h2>
                 </div>
                 <p className="text-sm sm:text-base text-primary-300">{selectedTeam.location}</p>
-                {selectedTeam.stadium_name && (
+                {selectedTeam.stadiumName && (
                   <p className="text-xs sm:text-sm text-primary-500">
-                    {selectedTeam.stadium_name}
-                    {selectedTeam.stadium_capacity && ` (${selectedTeam.stadium_capacity.toLocaleString()})`}
+                    {selectedTeam.stadiumName}
+                    {selectedTeam.stadiumCapacity && ` (${selectedTeam.stadiumCapacity.toLocaleString()})`}
                   </p>
                 )}
               </div>
@@ -341,10 +356,9 @@ export default function PickerPage() {
                 <div className="flex flex-col sm:flex-row sm:justify-between">
                   <span className="text-xs sm:text-sm text-primary-400">Difficulty</span>
                   <span className={`font-semibold text-sm sm:text-base ${
-                    selectedTeam.difficulty === 'Beginner' ? 'text-green-400' :
-                    selectedTeam.difficulty === 'Easy'     ? 'text-blue-400' :
-                    selectedTeam.difficulty === 'Medium'   ? 'text-yellow-400' :
-                    selectedTeam.difficulty === 'Hard'     ? 'text-orange-400' :
+                    selectedTeam.difficulty === 'Easy'       ? 'text-green-400' :
+                    selectedTeam.difficulty === 'Medium'     ? 'text-yellow-400' :
+                    selectedTeam.difficulty === 'Hard'       ? 'text-orange-400' :
                     'text-red-400'
                   }`}>{selectedTeam.difficulty}</span>
                 </div>
@@ -372,15 +386,16 @@ export default function PickerPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
+        </AnimatePresence>
 
         {/* Filters & Pick Section */}
         <div className="grid lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div className="lg:col-span-1">
             <div className="bg-card border border-primary-900 rounded-xl p-4 sm:p-6 sticky top-20">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg sm:text-xl font-bold">Filters</h2>
+                <h2 className="font-display text-xl sm:text-2xl tracking-wider">FILTERS</h2>
                 <button
                   onClick={() => setShowFilters(!showFilters)}
                   className="lg:hidden text-accent text-sm font-medium hover:text-accent-400 transition-colors"
@@ -516,13 +531,16 @@ export default function PickerPage() {
 
               {/* Random Pick Button - Outside scrollable area */}
               <div className="pt-4 space-y-3 border-t border-primary-900 mt-4">
-                <button
+                <motion.button
                   onClick={handleRandomPick}
                   disabled={sortedTeams.length === 0}
-                  className="w-full bg-accent hover:bg-accent-600 disabled:bg-primary-800 disabled:cursor-not-allowed px-4 py-2.5 sm:py-3 rounded-lg font-bold transition-all text-sm sm:text-base"
+                  whileHover={{ scale: sortedTeams.length === 0 ? 1 : 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ duration: 0.15 }}
+                  className="w-full bg-accent hover:bg-accent-600 disabled:bg-primary-800 disabled:cursor-not-allowed px-4 py-2.5 sm:py-3 rounded-lg font-bold transition-colors text-sm sm:text-base"
                 >
                   🎲 Random Pick
-                </button>
+                </motion.button>
                 <div className="text-center text-xs sm:text-sm text-primary-400">
                   {sortedTeams.length} team{sortedTeams.length !== 1 ? 's' : ''} available
                 </div>
@@ -533,12 +551,12 @@ export default function PickerPage() {
           {/* Teams Grid */}
           <div className="lg:col-span-3">
             <div className="mb-4 sm:mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold">
-                {searchQuery ? `Search Results` : 
+              <h2 className="font-display text-2xl sm:text-3xl tracking-wider">
+                {searchQuery ? 'SEARCH RESULTS' :
                  filters.conference === 'all' && filters.category === 'all' && filters.difficulty === 'all'
-                  ? 'All Teams'
-                  : 'Filtered Teams'
-                } ({sortedTeams.length})
+                  ? 'ALL TEAMS'
+                  : 'FILTERED TEAMS'
+                } <span className="text-accent">({sortedTeams.length})</span>
               </h2>
               {excludedTeams.length > 0 && (
                 <p className="text-sm text-primary-400 mt-2">
@@ -560,16 +578,24 @@ export default function PickerPage() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-                {sortedTeams.map((team) => (
-                  <button
+              <motion.div
+                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4"
+                initial="hidden"
+                animate="visible"
+              >
+                {sortedTeams.map((team, i) => (
+                  <motion.button
                     key={team.id}
+                    variants={cardVariants}
+                    custom={i}
                     onClick={() => handleTeamSelect(team)}
-                    className={`bg-card border ${
+                    whileHover={{ y: reduce ? 0 : -2, scale: reduce ? 1 : 1.01, transition: { duration: 0.2 } }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`bg-card border border-l-4 ${
                       selectedTeam?.id === team.id
-                        ? 'border-accent ring-2 ring-accent'
-                        : 'border-primary-900 hover:border-accent'
-                    } rounded-xl p-4 sm:p-5 text-left transition-all hover:bg-card-hover`}
+                        ? 'border-accent border-l-accent ring-2 ring-accent/40'
+                        : 'border-primary-900 border-l-accent/40 hover:border-primary-700 hover:border-l-accent'
+                    } p-4 sm:p-5 text-left transition-colors hover:bg-card-hover`}
                   >
                     <div className="flex items-center gap-2 sm:gap-3 mb-3">
                       <div className="flex gap-1.5">
@@ -582,29 +608,28 @@ export default function PickerPage() {
                           style={{ backgroundColor: team.colors[1] }}
                         />
                       </div>
-                      <h3 className="text-base sm:text-lg font-bold">{team.name}</h3>
+                      <h3 className="font-display text-lg sm:text-xl tracking-wider">{team.name}</h3>
                     </div>
 
                     <div className="space-y-1.5 text-xs sm:text-sm mb-3">
                       <div className="flex items-center justify-between">
                         <p className="text-primary-400">{team.conference}</p>
-                        <span className="text-highlight text-xs font-semibold">{team.stars} ★</span>
+                        <span className="text-accent text-xs font-display tracking-wider">{team.stars} ★</span>
                       </div>
                       <p className="text-primary-500 text-xs">{team.location}</p>
-                      {team.stadium_name && (
+                      {team.stadiumName && (
                         <p className="text-primary-500 text-xs">
-                          {team.stadium_name}
-                          {team.stadium_capacity && (
-                            <span className="text-primary-600"> ({team.stadium_capacity.toLocaleString()})</span>
+                          {team.stadiumName}
+                          {team.stadiumCapacity && (
+                            <span className="text-primary-600"> ({team.stadiumCapacity.toLocaleString()})</span>
                           )}
                         </p>
                       )}
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className={`px-2 py-0.5 rounded text-xs font-medium ${
-                          team.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-400' :
-                          team.difficulty === 'Easy'     ? 'bg-blue-500/20 text-blue-400' :
-                          team.difficulty === 'Medium'   ? 'bg-yellow-500/20 text-yellow-400' :
-                          team.difficulty === 'Hard'     ? 'bg-accent/20 text-accent-400' :
+                          team.difficulty === 'Easy'       ? 'bg-green-500/20 text-green-400' :
+                          team.difficulty === 'Medium'     ? 'bg-yellow-500/20 text-yellow-400' :
+                          team.difficulty === 'Hard'       ? 'bg-accent/20 text-accent-400' :
                           'bg-red-500/20 text-red-400'
                         }`}>
                           {team.difficulty}
@@ -633,13 +658,14 @@ export default function PickerPage() {
                         </span>
                       )}
                     </div>
-                  </button>
+                  </motion.button>
                 ))}
-              </div>
+              </motion.div>
             )}
           </div>
         </div>
       </div>
     </div>
+    </PageTransition>
   )
 }

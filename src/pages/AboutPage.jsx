@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
+import PageTransition from '../components/PageTransition'
 
 export default function AboutPage() {
   // Set page-specific meta tags for SEO
@@ -23,6 +24,7 @@ export default function AboutPage() {
   }, [])
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-black">
       {/* Header */}
       <header className="border-b border-primary-900 bg-black sticky top-0 z-50 backdrop-blur-sm bg-opacity-95">
@@ -218,5 +220,6 @@ export default function AboutPage() {
         </section>
       </main>
     </div>
+    </PageTransition>
   )
 }

@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import { useTeams } from '../hooks/useTeams'
 import Header from '../components/Header'
+import PageTransition from '../components/PageTransition'
 
 export default function ConferenceBuilderPage() {
   const { teams, loading, error } = useTeams()
@@ -221,8 +222,8 @@ export default function ConferenceBuilderPage() {
         conference: t.conference,
         location: t.location,
         stars: t.stars,
-        stadium: t.stadium_name,
-        capacity: t.stadium_capacity,
+        stadium: t.stadiumName,
+        capacity: t.stadiumCapacity,
         division: useDivisions ? t.division : null
       }))
     }
@@ -270,8 +271,8 @@ export default function ConferenceBuilderPage() {
           conference: t.conference,
           location: t.location,
           stars: t.stars,
-          stadium: t.stadium_name,
-          capacity: t.stadium_capacity,
+          stadium: t.stadiumName,
+          capacity: t.stadiumCapacity,
           division: conf.useDivisions ? t.division : null
         }))
       }
@@ -288,7 +289,7 @@ export default function ConferenceBuilderPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-app flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent mb-4"></div>
           <p className="text-primary-400">Loading teams...</p>
@@ -299,16 +300,16 @@ export default function ConferenceBuilderPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-app flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-red-500 mb-2">Error Loading Teams</h2>
+          <h2 className="font-display text-3xl tracking-wider text-red-500 mb-2">Error Loading Teams</h2>
           <p className="text-primary-400 mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="bg-accent hover:bg-accent-600 text-white px-6 py-3 rounded-lg font-bold transition-colors"
+            className="bg-accent hover:bg-accent-400 text-black px-6 py-3 font-display tracking-wider transition-colors"
           >
-            Retry
+            RETRY
           </button>
         </div>
       </div>
@@ -316,9 +317,10 @@ export default function ConferenceBuilderPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <PageTransition>
+    <div className="min-h-screen bg-app text-white">
       <Header />
-      
+
       <div className="max-w-7xl mx-auto p-4 md:p-8">
         <div className="mb-6 flex justify-between items-start">
           <div>
@@ -457,8 +459,8 @@ export default function ConferenceBuilderPage() {
                   <div className="text-sm text-gray-400 space-y-1">
                     <div>⭐ {team.stars} Stars • 🏟️ {team.conference}</div>
                     <div>📍 {team.location}</div>
-                    {team.stadium_name && (
-                      <div>🏟️ {team.stadium_name} ({team.stadium_capacity?.toLocaleString()})</div>
+                    {team.stadiumName && (
+                      <div>🏟️ {team.stadiumName} ({team.stadiumCapacity?.toLocaleString()})</div>
                     )}
                   </div>
                 </button>
@@ -573,8 +575,8 @@ export default function ConferenceBuilderPage() {
                         <div className="text-sm text-gray-400 space-y-1">
                           <div> {team.stars} Stars  {team.conference}</div>
                           <div> {team.location}</div>
-                          {team.stadium_name && (
-                            <div> {team.stadium_name} ({team.stadium_capacity?.toLocaleString()})</div>
+                          {team.stadiumName && (
+                            <div> {team.stadiumName} ({team.stadiumCapacity?.toLocaleString()})</div>
                           )}
                         </div>
                         {useDivisions && (
@@ -631,5 +633,6 @@ export default function ConferenceBuilderPage() {
         </div>
       </div>
     </div>
+    </PageTransition>
   )
 }

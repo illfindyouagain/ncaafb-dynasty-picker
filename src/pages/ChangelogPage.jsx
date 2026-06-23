@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
+import PageTransition from '../components/PageTransition'
 
 export default function ChangelogPage() {
   // Set page-specific meta tags for SEO
@@ -23,6 +24,28 @@ export default function ChangelogPage() {
   }, [])
 
   const changes = [
+    {
+      date: 'June 2026',
+      version: 'v1.0.5',
+      title: 'Animated UI, Static Data Migration & Survival Story',
+      isLatest: true,
+      note: "Real talk: I'm one guy, working a full-time job, building this on nights and weekends. Supabase deleted my project out from under me, which wiped the database entirely. Rather than scramble to rebuild it, I baked all 135 teams directly into the app — it actually loads faster now. I also took the opportunity to polish the UI with page transitions and motion throughout. The site isn't going anywhere.",
+      items: [
+        'NEW: Smooth page transitions — every route change fades and slides in cleanly',
+        'NEW: Team cards animate in with a stagger effect when you filter or load the picker',
+        'NEW: Selected team panel now has an entrance animation with scale + fade',
+        'NEW: FAQ accordion on the landing page animates open and closed',
+        'NEW: Nav active underline slides between links using a shared layout animation',
+        'NEW: Hero headline on the landing page staggers in line by line',
+        'NEW: Feature cards animate in on scroll as you reach them',
+        'NEW: All buttons have hover lift and tap press micro-interactions',
+        'CHANGED: Removed Supabase — all 135 team data is now bundled statically (faster loads, no DB dependency)',
+        'FIXED: Difficulty scale corrected to Easy / Medium / Hard / Legendary (was incorrectly labeled)',
+        'FIXED: Stadium name and capacity fields now display correctly across all pages',
+        'FIXED: Removed duplicate Vanderbilt entry (was appearing twice)',
+        'IMPROVED: Reduced motion respected — animations are skipped for users who prefer it',
+      ]
+    },
     {
       date: 'October 31, 2025',
       version: 'v1.0.4',
@@ -106,6 +129,7 @@ export default function ChangelogPage() {
   ]
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-black text-white">
       <div className="container mx-auto px-4 py-8 sm:py-12 max-w-4xl">
         {/* Header */}
@@ -120,28 +144,49 @@ export default function ChangelogPage() {
             Changelog
           </h1>
           <p className="text-base sm:text-lg text-primary-300">
-            Track all updates and improvements to CFB Dynasty Tools
+            What changed, why it changed, and the occasional honest explanation of what went wrong
+          </p>
+        </div>
+
+        {/* Solo dev callout */}
+        <div className="mb-8 bg-card border border-accent/30 border-l-4 border-l-accent p-4 sm:p-5">
+          <p className="text-sm text-primary-300 leading-relaxed">
+            <span className="text-accent font-semibold">Built by one person.</span> This is a side project — made nights and weekends around a full-time job. If something breaks or data is off, that's on me. If you find it useful, that means a lot.
           </p>
         </div>
 
         {/* Changelog Entries */}
         <div className="space-y-8 sm:space-y-12">
           {changes.map((change, idx) => (
-            <div key={idx} className="bg-card border border-primary-900 rounded-xl p-6 sm:p-8">
+            <div key={idx} className={`bg-card border rounded-xl p-6 sm:p-8 ${change.isLatest ? 'border-accent/60' : 'border-primary-900'}`}>
               {/* Version & Date */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
-                <h2 className="text-2xl sm:text-3xl font-bold text-accent mb-2 sm:mb-0">
-                  {change.version}
-                </h2>
+                <div className="flex items-center gap-3 mb-2 sm:mb-0">
+                  <h2 className="text-2xl sm:text-3xl font-bold text-accent">
+                    {change.version}
+                  </h2>
+                  {change.isLatest && (
+                    <span className="px-2 py-0.5 bg-accent text-black text-xs font-bold uppercase tracking-widest">
+                      Latest
+                    </span>
+                  )}
+                </div>
                 <span className="text-sm sm:text-base text-primary-400">
                   {change.date}
                 </span>
               </div>
 
               {/* Title */}
-              <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
+              <h3 className="text-xl sm:text-2xl font-semibold mb-4">
                 {change.title}
               </h3>
+
+              {/* Developer note */}
+              {change.note && (
+                <div className="mb-5 p-4 bg-app border border-primary-800 text-sm text-primary-300 leading-relaxed italic">
+                  {change.note}
+                </div>
+              )}
 
               {/* Changes List */}
               <ul className="space-y-3 sm:space-y-4">
@@ -161,16 +206,17 @@ export default function ChangelogPage() {
         {/* Footer Note */}
         <div className="mt-12 sm:mt-16 text-center">
           <p className="text-sm sm:text-base text-primary-500">
-            Have suggestions for future updates?{' '}
-            <a 
-              href="mailto:user@liftoffgaming.com" 
+            Have a suggestion or find a bug?{' '}
+            <a
+              href="mailto:grantscpro@gmail.com"
               className="text-accent hover:text-accent-400 transition-colors"
             >
-              Let us know!
+              Reach out
             </a>
           </p>
         </div>
       </div>
     </div>
+    </PageTransition>
   )
 }
