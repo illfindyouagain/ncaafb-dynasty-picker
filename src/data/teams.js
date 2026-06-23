@@ -634,7 +634,7 @@ export const teams = [
   {
     id: 38,
     name: 'Notre Dame',
-    conference: CONFERENCES.ACC,
+    conference: CONFERENCES.INDEPENDENT,
     categories: [CATEGORIES.BLUE_BLOODS, CATEGORIES.P4_SCHOOLS],
     difficulty: DIFFICULTY.MEDIUM,
     prestige: 93,
