@@ -14,14 +14,9 @@ export default function PickerPage() {
   const [showFilters, setShowFilters] = useState(true)
   const selectedTeamRef = useRef(null)
   
-  // NEW: Search state
   const [searchQuery, setSearchQuery] = useState('')
-  
-  // NEW: Sorting state
   const [sortBy, setSortBy] = useState('name')
   const [sortOrder, setSortOrder] = useState('asc')
-  
-  // NEW: Enhanced filter states
   const [starRange, setStarRange] = useState({ min: 0, max: 5 })
   const [ratingRange, setRatingRange] = useState({ min: 0, max: 99 })
   const [excludedTeams, setExcludedTeams] = useState([])
@@ -103,11 +98,11 @@ export default function PickerPage() {
       })
   , [teams])
 
-  // NEW: Sorted teams
   const sortedTeams = useMemo(() => {
+    const difficultyOrder = { 'Beginner': 1, 'Easy': 2, 'Medium': 3, 'Hard': 4, 'Elite': 5 }
     const sorted = [...filteredTeams].sort((a, b) => {
       let comparison = 0
-      
+
       switch (sortBy) {
         case 'name':
           comparison = a.name.localeCompare(b.name)
@@ -122,7 +117,6 @@ export default function PickerPage() {
           comparison = a.prestige - b.prestige
           break
         case 'difficulty':
-          const difficultyOrder = { 'Beginner': 1, 'Easy': 2, 'Medium': 3, 'Hard': 4, 'Elite': 5 }
           comparison = (difficultyOrder[a.difficulty] || 0) - (difficultyOrder[b.difficulty] || 0)
           break
         default:
@@ -204,7 +198,6 @@ export default function PickerPage() {
       <Header />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-        {/* NEW: Search Bar */}
         <div className="mb-6">
           <div className="relative">
             <input
@@ -225,6 +218,7 @@ export default function PickerPage() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-primary-500 hover:text-white transition-colors"
               >
                 ✕
@@ -233,7 +227,6 @@ export default function PickerPage() {
           </div>
         </div>
 
-        {/* NEW: Sorting Controls */}
         <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex flex-wrap gap-3 items-center">
             <label className="text-sm text-primary-400">Sort by:</label>
@@ -349,8 +342,9 @@ export default function PickerPage() {
                   <span className="text-xs sm:text-sm text-primary-400">Difficulty</span>
                   <span className={`font-semibold text-sm sm:text-base ${
                     selectedTeam.difficulty === 'Beginner' ? 'text-green-400' :
-                    selectedTeam.difficulty === 'Intermediate' ? 'text-yellow-400' :
-                    selectedTeam.difficulty === 'Advanced' ? 'text-orange-400' :
+                    selectedTeam.difficulty === 'Easy'     ? 'text-blue-400' :
+                    selectedTeam.difficulty === 'Medium'   ? 'text-yellow-400' :
+                    selectedTeam.difficulty === 'Hard'     ? 'text-orange-400' :
                     'text-red-400'
                   }`}>{selectedTeam.difficulty}</span>
                 </div>
@@ -358,7 +352,7 @@ export default function PickerPage() {
               <div className="space-y-2 sm:space-y-3">
                 <div className="flex flex-col sm:flex-row sm:justify-between">
                   <span className="text-xs sm:text-sm text-primary-400">Prestige</span>
-                  <span className="font-semibold text-sm sm:text-base">{selectedTeam.prestige}/6</span>
+                  <span className="font-semibold text-sm sm:text-base">{selectedTeam.prestige}/100</span>
                 </div>
               </div>
             </div>
@@ -480,7 +474,6 @@ export default function PickerPage() {
                   </div>
                 </div>
 
-                {/* NEW: Rating Range Filter */}
                 <div>
                   <label className="block text-xs sm:text-sm font-medium mb-2 text-primary-300">
                     Overall Rating: {ratingRange.min} - {ratingRange.max}
@@ -609,8 +602,9 @@ export default function PickerPage() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className={`px-2 py-0.5 rounded text-xs font-medium ${
                           team.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-400' :
-                          team.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
-                          team.difficulty === 'Advanced' ? 'bg-accent/20 text-accent-400' :
+                          team.difficulty === 'Easy'     ? 'bg-blue-500/20 text-blue-400' :
+                          team.difficulty === 'Medium'   ? 'bg-yellow-500/20 text-yellow-400' :
+                          team.difficulty === 'Hard'     ? 'bg-accent/20 text-accent-400' :
                           'bg-red-500/20 text-red-400'
                         }`}>
                           {team.difficulty}

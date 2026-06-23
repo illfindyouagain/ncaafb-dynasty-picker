@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+﻿import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTeams } from '../hooks/useTeams'
 import Header from '../components/Header'
@@ -39,7 +39,6 @@ export default function ConferenceBuilderPage() {
   useEffect(() => {
     if (Object.keys(activeConferences).length > 0) {
       localStorage.setItem('activeConferences', JSON.stringify(activeConferences))
-      console.log('💾 Auto-saved conferences to localStorage')
     }
   }, [activeConferences])
 
@@ -59,7 +58,6 @@ export default function ConferenceBuilderPage() {
         const parsed = JSON.parse(savedConferences)
         if (Object.keys(parsed).length > 0) {
           setActiveConferences(parsed)
-          console.log('📂 Loaded saved conferences from localStorage')
         }
       } catch (e) {
         console.error('Failed to load saved conferences', e)
@@ -71,9 +69,7 @@ export default function ConferenceBuilderPage() {
     }
   }, []) // Empty dependency array = only run once on mount
 
-  // Real FBS conference names
-  const realConferences = [...new Set(teams.map(t => t.conference))].sort()
-  const conferences = [...new Set(teams.map(t => t.conference))].sort()
+  const conferences = useMemo(() => [...new Set(teams.map(t => t.conference))].sort(), [teams])
 
   // Get current conference data
   const currentConference = selectedConferenceName ? activeConferences[selectedConferenceName] || {
@@ -88,8 +84,10 @@ export default function ConferenceBuilderPage() {
   const division1Name = currentConference.division1Name
   const division2Name = currentConference.division2Name
 
-  // Get all teams used across ALL conferences being built
-  const usedTeams = Object.values(activeConferences).flatMap(conf => conf.teams.map(t => t.id))
+  const usedTeams = useMemo(
+    () => Object.values(activeConferences).flatMap(conf => conf.teams.map(t => t.id)),
+    [activeConferences]
+  )
 
   const availableTeams = teams.filter(team => {
     if (usedTeams.includes(team.id)) return false // Filter out teams used in any conference
@@ -386,7 +384,7 @@ export default function ConferenceBuilderPage() {
                 })}
               </div>
               <div className="text-sm text-primary-400">
-                {usedTeams.length} teams used • {136 - usedTeams.length} remaining
+                {usedTeams.length} teams used • {teams.length - usedTeams.length} remaining
               </div>
             </div>
           </div>
@@ -416,7 +414,7 @@ export default function ConferenceBuilderPage() {
             className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white text-2xl font-bold focus:border-accent focus:outline-none"
           >
             <option value="">-- Choose a Conference --</option>
-            {realConferences.map(conf => (
+            {conferences.map(conf => (
               <option key={conf} value={conf}>{conf}</option>
             ))}
           </select>
@@ -449,10 +447,11 @@ export default function ConferenceBuilderPage() {
             </div>
             <div className="space-y-2 max-h-[600px] overflow-y-auto">
               {availableTeams.map(team => (
-                <div
+                <button
                   key={team.id}
+                  type="button"
                   onClick={() => addTeamToConference(team)}
-                  className="bg-black border border-gray-800 rounded-lg p-4 cursor-pointer hover:border-accent hover:bg-gray-900 transition-colors"
+                  className="w-full text-left bg-black border border-gray-800 rounded-lg p-4 hover:border-accent hover:bg-gray-900 transition-colors"
                 >
                   <div className="font-bold text-lg mb-1">{team.name}</div>
                   <div className="text-sm text-gray-400 space-y-1">
@@ -462,7 +461,7 @@ export default function ConferenceBuilderPage() {
                       <div>🏟️ {team.stadium_name} ({team.stadium_capacity?.toLocaleString()})</div>
                     )}
                   </div>
-                </div>
+                </button>
               ))}
               {availableTeams.length === 0 && (
                 <p className="text-gray-400 text-center py-8">No teams found</p>
