@@ -38,9 +38,11 @@ export default function Header() {
             </span>
           </Link>
 
-          <nav className="flex items-center gap-5 sm:gap-7">
+          <nav className="flex items-center gap-4 sm:gap-6">
+            {navLink('/teams', 'Teams')}
+            {navLink('/rankings', 'Polls')}
             {navLink('/conference-builder', 'Builder')}
-            {navLink('/changelog', 'Changelog')}
+            <span className="hidden sm:block">{navLink('/changelog', 'Changelog')}</span>
             <motion.div
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.96 }}
@@ -48,7 +50,7 @@ export default function Header() {
             >
               <Link
                 to="/picker"
-                className={`bg-accent text-black hover:bg-accent-400 px-4 sm:px-6 py-2 font-display tracking-wider text-base sm:text-lg transition-colors block ${pathname === '/picker' ? 'bg-accent-400' : ''}`}
+                className={`bg-accent text-black hover:bg-accent-400 px-3 sm:px-6 py-2 font-display tracking-wider text-sm sm:text-lg transition-colors block ${pathname === '/picker' ? 'bg-accent-400' : ''}`}
               >
                 PICK NOW →
               </Link>
