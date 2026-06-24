@@ -60,8 +60,9 @@ export default function ConferenceBuilderPage() {
         if (Object.keys(parsed).length > 0) {
           setActiveConferences(parsed)
         }
-      } catch (e) {
-        console.error('Failed to load saved conferences', e)
+      } catch {
+        // Corrupted localStorage entry — start fresh
+        localStorage.removeItem('activeConferences')
       }
     }
     

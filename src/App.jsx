@@ -7,6 +7,7 @@ import RankingsPage from './pages/RankingsPage'
 import AboutPage from './pages/AboutPage'
 import ChangelogPage from './pages/ChangelogPage'
 import ConferenceBuilderPage from './pages/ConferenceBuilderPage'
+import PrivacyPolicy from './pages/PrivacyPolicy'
 import PollTicker from './components/PollTicker'
 import ErrorBoundary from './components/ErrorBoundary'
 
@@ -25,6 +26,7 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/changelog" element={<ChangelogPage />} />
             <Route path="/conference-builder" element={<ConferenceBuilderPage />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
           </Routes>
         </AnimatePresence>
       </div>

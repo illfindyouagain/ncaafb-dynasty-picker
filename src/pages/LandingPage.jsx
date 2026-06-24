@@ -379,7 +379,7 @@ export default function LandingPage() {
               <div className="text-center">
                 <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-4">Quick Links</h3>
                 <ul className="space-y-2">
-                  {[['/', 'Home'], ['/picker', 'Team Picker'], ['/teams', 'All Teams'], ['/rankings', 'Poll Rankings'], ['/about', 'About & FAQ'], ['/changelog', 'Changelog']].map(([to, label]) => (
+                  {[['/', 'Home'], ['/picker', 'Team Picker'], ['/teams', 'All Teams'], ['/rankings', 'Poll Rankings'], ['/about', 'About & FAQ'], ['/changelog', 'Changelog'], ['/privacy', 'Privacy Policy']].map(([to, label]) => (
                     <li key={to}>
                       <Link to={to} className="text-primary-400 hover:text-accent text-sm transition-colors">
                         {label}
