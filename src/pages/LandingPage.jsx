@@ -25,7 +25,7 @@ export default function LandingPage() {
   const conferences = [...new Set(teams.map(t => t.conference))].sort()
 
   const stats = [
-    { label: 'Teams', value: teams.length > 0 ? teams.length.toString() : '135' },
+    { label: 'Teams', value: teams.length > 0 ? teams.length.toString() : '137' },
     { label: 'Categories', value: '10' },
     { label: 'Conferences', value: '10' },
     { label: 'Free', value: '✓' },
@@ -34,21 +34,21 @@ export default function LandingPage() {
   const features = [
     { title: 'Smart Categories', description: 'Blue Bloods, Dark Horses, Sleeping Giants, Rebuild Projects & more', icon: '🏆' },
     { title: 'Difficulty Tiers', description: 'Filter by Easy, Medium, Hard, or Legendary challenges', icon: '⚡' },
-    { title: '2025 Realignment', description: 'USC, UCLA, Oregon, Washington in the Big Ten — Texas & OU in the SEC', icon: '🗺️' },
+    { title: 'CFB 27 Realignment', description: 'Updated for CFB 27 — Big 12 expansion, Pac-12 rebuild, and all confirmed conference changes', icon: '🗺️' },
     { title: 'Random Dynasty Mode', description: "Can't decide? Let fate pick your next dynasty adventure", icon: '🎲' },
     { title: 'Conference Builder', description: 'Create custom conferences with click-to-add team selection and division support', icon: '🏗️' },
     { title: 'Advanced Filters', description: 'Sort and filter by overall rating, stars, prestige, and more', icon: '🏈' },
-    { title: '137 Teams + CFB 27 Previews', description: 'All 135 current FBS teams plus NDSU & Sacramento State previewed ahead of CFB 27', icon: '📊' },
+    { title: '137 FBS Teams', description: 'All FBS teams including NDSU and Sacramento State joining the field in CFB 27', icon: '📊' },
   ]
 
   const faqs = [
     {
       q: 'What is a Dynasty Team Picker?',
-      a: "It helps you choose the perfect team for your NCAA Football 26 Dynasty Mode career. Whether you want a powerhouse or a rebuild challenge, we've got you covered.",
+      a: "It helps you choose the perfect team for your CFB Dynasty Mode career. Whether you want a powerhouse or a rebuild challenge, we've got you covered.",
     },
     {
-      q: 'Is the data up-to-date with 2025 realignment?',
-      a: 'Yes! We include USC, UCLA, Oregon, Washington in the Big Ten, and Texas & Oklahoma in the SEC, plus all other conference changes.',
+      q: 'Is the data up-to-date for CFB 27?',
+      a: 'Yes! All 137 FBS teams are included with CFB 27 conference changes — Big 12 expansion, the Pac-12 rebuild, and all other confirmed realignment moves.',
     },
     {
       q: 'What are "Blue Bloods" and "Dark Horses"?',
@@ -70,30 +70,30 @@ export default function LandingPage() {
         <Header />
 
         {/* Hero */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-12 sm:pb-16">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-8 sm:pb-10">
           <motion.div
-            className="text-center mb-12 sm:mb-14"
+            className="text-center mb-8 sm:mb-10"
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
           >
-            <motion.div variants={staggerItem} className="inline-flex items-center gap-2 mb-8 px-3 py-1 border border-highlight/40 text-highlight text-xs font-medium uppercase tracking-widest">
+            <motion.div variants={staggerItem} className="inline-flex items-center gap-2 mb-6 px-3 py-1 border border-highlight/40 text-highlight text-xs font-medium uppercase tracking-widest">
               ⚠️ Unofficial Fan Tool
             </motion.div>
             <motion.h2
               variants={staggerItem}
-              className="font-display text-7xl sm:text-8xl md:text-[9rem] lg:text-[11rem] text-white leading-none tracking-wider"
+              className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-white leading-none tracking-wider"
             >
               PICK YOUR
             </motion.h2>
             <motion.h2
               variants={staggerItem}
-              className="font-display text-7xl sm:text-8xl md:text-[9rem] lg:text-[11rem] text-accent leading-none tracking-wider mb-6"
+              className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-accent leading-none tracking-wider mb-4"
             >
               DYNASTY
             </motion.h2>
             <motion.p variants={staggerItem} className="text-base sm:text-lg text-primary-300 max-w-lg mx-auto leading-relaxed">
-              135 FBS teams. Smart filters. One perfect choice for your next dynasty run.
+              137 FBS teams. Smart filters. One perfect choice for your next dynasty run.
             </motion.p>
           </motion.div>
 
@@ -111,7 +111,7 @@ export default function LandingPage() {
             >
               <div className="font-display text-4xl sm:text-5xl text-accent tracking-wider mb-3">TEAM PICKER</div>
               <p className="text-primary-300 mb-6 text-sm leading-relaxed">
-                Filter all 135 FBS teams by conference, difficulty, prestige, and ratings. Random pick included.
+                Filter all 137 FBS teams by conference, difficulty, prestige, and ratings. Random pick included.
               </p>
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ duration: 0.15 }}>
                 <Link
