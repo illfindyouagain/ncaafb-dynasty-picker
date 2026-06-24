@@ -26,9 +26,24 @@ export default function ChangelogPage() {
   const changes = [
     {
       date: 'June 2026',
+      version: 'v1.0.8',
+      title: 'Code Quality & Privacy',
+      isLatest: true,
+      items: [
+        'NEW: Added Privacy Policy page — covers what data is and isn\'t collected, Vercel Analytics disclosure, and how localStorage is used by the Conference Builder.',
+        'FIX: AP Poll data is now fetched once and shared across the page — previously the ticker and the Poll Rankings page each fired their own request to the ESPN API simultaneously.',
+        'FIX: Fetch requests in the AP Poll hook now clean up properly on unmount, preventing stale responses from updating state after a page change.',
+        'FIX: Conference Builder no longer logs parse errors to the console in production — corrupted localStorage is silently cleared instead.',
+        'SECURITY: Added Strict-Transport-Security, Referrer-Policy, and Permissions-Policy HTTP headers to all responses.',
+        'CLEANUP: Removed a non-functional Google Analytics placeholder that was making network requests with no configured measurement ID.',
+        'CLEANUP: Removed personal contact email from source. The "Reach out" link on this page now goes to the About page instead.',
+      ]
+    },
+    {
+      date: 'June 2026',
       version: 'v1.0.7',
       title: 'Security Cleanup',
-      isLatest: true,
+      isLatest: false,
       items: [
         'SECURITY: Removed migrate-teams.js — a leftover one-time migration script from the Supabase era that had credentials hardcoded in the source file. The script was already obsolete (Supabase was removed in v1.0.5), but it should have been cleaned up sooner.',
       ]
