@@ -26,9 +26,21 @@ export default function ChangelogPage() {
   const changes = [
     {
       date: 'June 2026',
+      version: 'v1.0.9',
+      title: 'CFB 27 Updates & Layout Fix',
+      isLatest: true,
+      items: [
+        'FIX: Reduced hero heading size so the Team Picker and Conference Builder buttons are visible without scrolling on most screens.',
+        'UPDATE: Team count updated to 137 across the site — NDSU and Sacramento State are fully included, no longer marked as previews.',
+        'UPDATE: "2025 Realignment" feature card renamed to "CFB 27 Realignment" with updated description covering Big 12 expansion and the Pac-12 rebuild.',
+        'UPDATE: FAQ and meta copy now reference both NCAA Football 26 and CFB 27.',
+      ]
+    },
+    {
+      date: 'June 2026',
       version: 'v1.0.8',
       title: 'Code Quality & Privacy',
-      isLatest: true,
+      isLatest: false,
       items: [
         'NEW: Added Privacy Policy page — covers what data is and isn\'t collected, Vercel Analytics disclosure, and how localStorage is used by the Conference Builder.',
         'FIX: AP Poll data is now fetched once and shared across the page — previously the ticker and the Poll Rankings page each fired their own request to the ESPN API simultaneously.',
