@@ -8,12 +8,13 @@ import AboutPage from './pages/AboutPage'
 import ChangelogPage from './pages/ChangelogPage'
 import ConferenceBuilderPage from './pages/ConferenceBuilderPage'
 import PollTicker from './components/PollTicker'
+import ErrorBoundary from './components/ErrorBoundary'
 
 function App() {
   const location = useLocation()
 
   return (
-    <>
+    <ErrorBoundary>
       <div className="pb-8">
         <AnimatePresence mode="wait" initial={false}>
           <Routes location={location} key={location.pathname}>
@@ -28,7 +29,7 @@ function App() {
         </AnimatePresence>
       </div>
       <PollTicker />
-    </>
+    </ErrorBoundary>
   )
 }
 

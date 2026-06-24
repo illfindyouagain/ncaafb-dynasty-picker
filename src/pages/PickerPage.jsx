@@ -23,6 +23,7 @@ export default function PickerPage() {
   const [starRange, setStarRange] = useState({ min: 0, max: 5 })
   const [ratingRange, setRatingRange] = useState({ min: 0, max: 99 })
   const [excludedTeams, setExcludedTeams] = useState([])
+  const reduce = useReducedMotion()
 
   // Set page-specific meta tags for SEO
   useEffect(() => {
@@ -195,8 +196,6 @@ export default function PickerPage() {
       </div>
     )
   }
-
-  const reduce = useReducedMotion()
 
   return (
     <PageTransition>
