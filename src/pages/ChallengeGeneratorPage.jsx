@@ -15,7 +15,7 @@ const CATEGORIES = {
       'Start at a program that has never won a national championship',
       'Start at a team that finished last in their conference last season',
       'Start at a Rebuild Project category team',
-      'Start at a program in the Mountain West, Sun Belt, MAC, or C-USA',
+      'Start at a program in the Mountain West, Pac-12, Sun Belt, MAC, or C-USA',
       'Start at a program with fewer than 3 recruiting stars',
     ],
   },

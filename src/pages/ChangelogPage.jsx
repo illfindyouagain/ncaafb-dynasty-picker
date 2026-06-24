@@ -26,9 +26,33 @@ export default function ChangelogPage() {
   const changes = [
     {
       date: 'June 2026',
+      version: 'v1.3.0',
+      title: 'Pac-12 Rebuild & New Categories',
+      isLatest: true,
+      items: [
+        'MOVED: Boise State, Colorado State, Fresno State, San Diego State, Utah State — Mountain West → Pac-12 (Pac-12 rebuild fully confirmed for CFB 27)',
+        'NEW: Quarterback Factory category — 20 programs historically known for producing elite NFL quarterbacks (Alabama, Ohio State, USC, Oklahoma, Purdue, LSU, Tennessee, Notre Dame, and more)',
+        'NEW: Defensive Elites category — 9 teams with in-game defense ratings of 88+ (Alabama, Georgia, Notre Dame, Ohio State, Clemson, Oregon, Michigan, Penn State, Texas)',
+        'NEW: Option Offense category — Army, Navy, Air Force (the triple-option faithful)',
+        'FIX: AP Poll ticker now uses Framer Motion for animation — no longer stops when OS reduce-motion accessibility setting is enabled',
+      ]
+    },
+    {
+      date: 'June 2026',
+      version: 'v1.2.0',
+      title: 'Challenge Generator, Shareable Cards & Countdown',
+      isLatest: false,
+      items: [
+        'NEW: Dynasty Challenge Generator (/challenge) — generate randomized dynasty constraint sets at three difficulty tiers: Casual (3 constraints), Hardcore (4), Legendary (5). Challenges are shareable via URL.',
+        'NEW: Shareable Team Cards — every team detail page has a "Share This Pick" button that opens a screenshot-ready card with your team\'s name, colors, ratings, and categories.',
+        'NEW: CFB 27 Countdown Banner — live day/hour/minute/second countdown to the July 9 launch. Auto-switches to a "CFB 27 IS LIVE" message after launch and disappears two weeks later.',
+      ]
+    },
+    {
+      date: 'June 2026',
       version: 'v1.1.0',
       title: 'Team Detail Pages',
-      isLatest: true,
+      isLatest: false,
       items: [
         'NEW: Every team now has its own page (e.g. /teams/ohio-state) with a full profile — OVR, offense, defense, and prestige stat bars, difficulty explanation, categories, recruiting stars, stadium info, and a list of other teams in the same conference.',
         'NEW: The Team Picker CTA on each detail page lets you jump straight into the picker with that team pre-selected.',

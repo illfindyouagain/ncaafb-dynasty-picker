@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useReducedMotion } from 'motion/react'
+import { motion } from 'motion/react'
 import { useAPPoll } from '../hooks/useAPPoll'
 
 function TrendBadge({ trend }) {
@@ -12,11 +12,11 @@ function TrendBadge({ trend }) {
 
 export default function PollTicker() {
   const { poll, loading, error } = useAPPoll()
-  const reduce = useReducedMotion()
 
   if (loading || error || !poll) return null
 
   const teams = poll.teams
+  if (!teams?.length) return null
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 h-8 flex items-stretch bg-[#030803] border-t border-primary-900/80 shadow-lg shadow-black/40">
@@ -31,9 +31,16 @@ export default function PollTicker() {
 
       {/* Scrolling strip */}
       <div className="overflow-hidden flex-1 flex items-center">
-        <div
-          className={reduce ? 'flex' : 'ticker-scroll flex'}
+        <motion.div
+          className="flex"
           style={{ width: 'max-content' }}
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{
+            duration: 70,
+            ease: 'linear',
+            repeat: Infinity,
+            repeatType: 'loop',
+          }}
         >
           {/* Render twice for seamless loop */}
           {[...teams, ...teams].map((team, i) => (
@@ -52,7 +59,7 @@ export default function PollTicker() {
               <span className="text-primary-800 text-[10px] ml-2">◆</span>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       {/* Right edge: season label */}
