@@ -26,10 +26,18 @@ export default function ChangelogPage() {
   const changes = [
     {
       date: 'June 2026',
+      version: 'v1.0.7',
+      title: 'Security Cleanup',
+      isLatest: true,
+      items: [
+        'SECURITY: Removed migrate-teams.js — a leftover one-time migration script from the Supabase era that had credentials hardcoded in the source file. The script was already obsolete (Supabase was removed in v1.0.5), but it should have been cleaned up sooner.',
+      ]
+    },
+    {
       date: 'June 2026',
       version: 'v1.0.6',
       title: 'CFB 27 Conference Updates & New Team Previews',
-      isLatest: true,
+      isLatest: false,
       note: "CFB 27 drops July 9 so I'm getting ahead of the conference changes now. I'm updating what's confirmed — but some of this is still in flux (looking at you, Louisiana Tech). If a team's conference looks wrong, that's probably why. I'll do a full cleanup once the game is actually out and ratings are official.",
       items: [
         'NEW: North Dakota State added — joining Mountain West for CFB 27 (ratings TBD)',
