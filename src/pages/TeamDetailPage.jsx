@@ -1,10 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { useTeams } from '../hooks/useTeams'
 import { teamSlug } from '../lib/teamSlug'
 import Header from '../components/Header'
 import PageTransition from '../components/PageTransition'
+import ShareCard from '../components/ShareCard'
 
 const DIFFICULTY_DESC = {
   Easy: 'Immediate contender with blue-chip recruiting and proven depth. Great for narrative-focused or sim-style playthroughs.',
@@ -78,6 +79,7 @@ export default function TeamDetailPage() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { teams } = useTeams()
+  const [showCard, setShowCard] = useState(false)
 
   const team = teams.find(t => teamSlug(t.name) === slug)
 
@@ -240,15 +242,24 @@ export default function TeamDetailPage() {
                 </div>
               )}
 
-              {/* CTA */}
+              {/* CTAs */}
               <Link
                 to={`/picker?team=${team.id}`}
-                className="flex items-center justify-center gap-2 bg-accent hover:bg-accent-400 text-black font-display tracking-wider px-6 py-4 transition-colors mt-auto"
+                className="flex items-center justify-center gap-2 bg-accent hover:bg-accent-400 text-black font-display tracking-wider px-6 py-4 transition-colors"
               >
                 PICK {team.name.toUpperCase()} →
               </Link>
+              <button
+                onClick={() => setShowCard(true)}
+                className="flex items-center justify-center gap-2 bg-primary-900 hover:bg-primary-800 border border-primary-800 text-white font-display tracking-wider px-6 py-3 transition-colors text-sm"
+              >
+                📤 SHARE THIS PICK
+              </button>
             </motion.div>
           </div>
+
+          {/* Share card modal */}
+          {showCard && <ShareCard team={team} onClose={() => setShowCard(false)} />}
 
           {/* Related teams */}
           {related.length > 0 && (

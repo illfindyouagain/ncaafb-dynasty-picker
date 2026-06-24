@@ -9,6 +9,7 @@ import ChangelogPage from './pages/ChangelogPage'
 import ConferenceBuilderPage from './pages/ConferenceBuilderPage'
 import TeamDetailPage from './pages/TeamDetailPage'
 import PrivacyPolicy from './pages/PrivacyPolicy'
+import ChallengeGeneratorPage from './pages/ChallengeGeneratorPage'
 import PollTicker from './components/PollTicker'
 import ErrorBoundary from './components/ErrorBoundary'
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/changelog" element={<ChangelogPage />} />
             <Route path="/conference-builder" element={<ConferenceBuilderPage />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/challenge" element={<ChallengeGeneratorPage />} />
           </Routes>
         </AnimatePresence>
       </div>

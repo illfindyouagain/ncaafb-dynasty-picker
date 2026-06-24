@@ -37,6 +37,7 @@ const features = [
   { title: 'Advanced Filters', description: 'Sort by OVR, prestige, stars, conference, and difficulty simultaneously.' },
   { title: 'Team Detail Pages', description: 'Full stat breakdown, stadium info, and dynasty context for every FBS program.' },
   { title: 'Conference Builder', description: 'Build custom conferences with any FBS teams, add divisions, and export as JSON.' },
+  { title: 'Dynasty Challenge Generator', description: 'Get random constraints — recruiting limits, playstyle rules, win goals — for your next CFB dynasty. Share your challenge with a link.', link: '/challenge' },
 ]
 
 const faqs = [
@@ -343,10 +344,15 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1], delay: reduce ? 0 : i * 0.06 }}
-                className="bg-card border border-primary-900 p-5 hover:bg-card-hover transition-colors"
+                className="bg-card border border-primary-900 p-5 hover:bg-card-hover transition-colors flex flex-col"
               >
                 <h4 className="font-display text-lg tracking-wider mb-2">{f.title}</h4>
-                <p className="text-xs text-primary-400 leading-relaxed">{f.description}</p>
+                <p className="text-xs text-primary-400 leading-relaxed flex-1">{f.description}</p>
+                {f.link && (
+                  <Link to={f.link} className="text-[10px] text-accent hover:underline uppercase tracking-widest mt-3 self-start">
+                    Try it →
+                  </Link>
+                )}
               </motion.div>
             ))}
           </div>
@@ -432,7 +438,7 @@ export default function LandingPage() {
                 <div>
                   <div className="text-[10px] text-primary-600 uppercase tracking-widest mb-3">Tools</div>
                   <ul className="space-y-2">
-                    {[['/picker', 'Team Picker'], ['/conference-builder', 'Conf Builder'], ['/teams', 'All Teams'], ['/rankings', 'Poll Rankings']].map(([to, label]) => (
+                    {[['/picker', 'Team Picker'], ['/conference-builder', 'Conf Builder'], ['/teams', 'All Teams'], ['/rankings', 'Poll Rankings'], ['/challenge', 'Challenge Gen']].map(([to, label]) => (
                       <li key={to}><Link to={to} className="text-primary-400 hover:text-accent text-sm transition-colors">{label}</Link></li>
                     ))}
                   </ul>
@@ -447,7 +453,7 @@ export default function LandingPage() {
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <div className="text-[10px] text-primary-600 uppercase tracking-widest mb-3">Updates</div>
-                  <Link to="/changelog" className="text-primary-400 hover:text-accent text-sm transition-colors block">v1.1.0 — Team detail pages</Link>
+                  <Link to="/changelog" className="text-primary-400 hover:text-accent text-sm transition-colors block">v1.2.0 — Challenge generator + shareable cards</Link>
                   <Link to="/changelog" className="text-primary-500 hover:text-accent text-xs transition-colors block mt-1">View all changes →</Link>
                 </div>
               </div>
