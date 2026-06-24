@@ -7,6 +7,7 @@ import RankingsPage from './pages/RankingsPage'
 import AboutPage from './pages/AboutPage'
 import ChangelogPage from './pages/ChangelogPage'
 import ConferenceBuilderPage from './pages/ConferenceBuilderPage'
+import TeamDetailPage from './pages/TeamDetailPage'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import PollTicker from './components/PollTicker'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -22,6 +23,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/picker" element={<PickerPage />} />
             <Route path="/teams" element={<TeamsPage />} />
+            <Route path="/teams/:slug" element={<TeamDetailPage />} />
             <Route path="/rankings" element={<RankingsPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/changelog" element={<ChangelogPage />} />

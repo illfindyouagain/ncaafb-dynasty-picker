@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { useTeams } from '../hooks/useTeams'
+import { teamSlug } from '../lib/teamSlug'
 import Header from '../components/Header'
 import PageTransition from '../components/PageTransition'
 import { panelVariants } from '../lib/motionTokens'
@@ -154,12 +155,20 @@ export default function TeamsPage() {
                       {cat}
                     </span>
                   ))}
-                  <Link
-                    to={`/picker?team=${selectedTeam.id}`}
-                    className="ml-auto text-xs text-accent hover:underline"
-                  >
-                    Open in Picker →
-                  </Link>
+                  <div className="ml-auto flex items-center gap-4">
+                    <Link
+                      to={`/teams/${teamSlug(selectedTeam.name)}`}
+                      className="text-xs text-primary-400 hover:text-white transition-colors"
+                    >
+                      Full Profile →
+                    </Link>
+                    <Link
+                      to={`/picker?team=${selectedTeam.id}`}
+                      className="text-xs text-accent hover:underline"
+                    >
+                      Open in Picker →
+                    </Link>
+                  </div>
                 </div>
               </motion.div>
             )}
