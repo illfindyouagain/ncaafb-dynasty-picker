@@ -26,9 +26,20 @@ export default function ChangelogPage() {
   const changes = [
     {
       date: 'June 2026',
+      version: 'v1.1.0',
+      title: 'Team Detail Pages',
+      isLatest: true,
+      items: [
+        'NEW: Every team now has its own page (e.g. /teams/ohio-state) with a full profile — OVR, offense, defense, and prestige stat bars, difficulty explanation, categories, recruiting stars, stadium info, and a list of other teams in the same conference.',
+        'NEW: The Team Picker CTA on each detail page lets you jump straight into the picker with that team pre-selected.',
+        'UPDATE: The Teams browser expanded panel now includes a "Full Profile →" link to the team\'s detail page.',
+      ]
+    },
+    {
+      date: 'June 2026',
       version: 'v1.0.9',
       title: 'CFB 27 Updates & Layout Fix',
-      isLatest: true,
+      isLatest: false,
       items: [
         'FIX: Reduced hero heading size so the Team Picker and Conference Builder buttons are visible without scrolling on most screens.',
         'UPDATE: Team count updated to 137 across the site — NDSU and Sacramento State are fully included, no longer marked as previews.',
