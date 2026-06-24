@@ -183,8 +183,8 @@ export default function ChangelogPage() {
 
         {/* Changelog Entries */}
         <div className="space-y-8 sm:space-y-12">
-          {changes.map((change, idx) => (
-            <div key={idx} className={`bg-card border rounded-xl p-6 sm:p-8 ${change.isLatest ? 'border-accent/60' : 'border-primary-900'}`}>
+          {changes.map((change) => (
+            <div key={change.version} className={`bg-card border rounded-xl p-6 sm:p-8 ${change.isLatest ? 'border-accent/60' : 'border-primary-900'}`}>
               {/* Version & Date */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
                 <div className="flex items-center gap-3 mb-2 sm:mb-0">
@@ -233,12 +233,12 @@ export default function ChangelogPage() {
         <div className="mt-12 sm:mt-16 text-center">
           <p className="text-sm sm:text-base text-primary-500">
             Have a suggestion or find a bug?{' '}
-            <a
-              href="mailto:grantscpro@gmail.com"
+            <Link
+              to="/about"
               className="text-accent hover:text-accent-400 transition-colors"
             >
               Reach out
-            </a>
+            </Link>
           </p>
         </div>
       </div>

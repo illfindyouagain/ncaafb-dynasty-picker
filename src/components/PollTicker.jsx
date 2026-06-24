@@ -11,10 +11,10 @@ function TrendBadge({ trend }) {
 }
 
 export default function PollTicker() {
-  const { poll, loading } = useAPPoll()
+  const { poll, loading, error } = useAPPoll()
   const reduce = useReducedMotion()
 
-  if (loading || !poll) return null
+  if (loading || error || !poll) return null
 
   const teams = poll.teams
 
@@ -38,7 +38,7 @@ export default function PollTicker() {
           {/* Render twice for seamless loop */}
           {[...teams, ...teams].map((team, i) => (
             <div
-              key={i}
+              key={`${i < teams.length ? 'a' : 'b'}-${team.rank}`}
               className="flex items-center gap-1.5 px-3.5 select-none"
             >
               <span className={`font-display text-[13px] tracking-wider tabular-nums ${team.rank <= 5 ? 'text-accent' : 'text-primary-500'}`}>

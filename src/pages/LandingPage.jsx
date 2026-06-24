@@ -150,8 +150,8 @@ export default function LandingPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            {stats.map((stat, i) => (
-              <div key={i} className="text-center px-3 sm:px-6">
+            {stats.map((stat) => (
+              <div key={stat.label} className="text-center px-3 sm:px-6">
                 <div className="font-display text-3xl sm:text-4xl text-accent tracking-wider">{stat.value}</div>
                 <div className="text-primary-400 text-xs uppercase tracking-widest mt-0.5">{stat.label}</div>
               </div>
@@ -190,9 +190,9 @@ export default function LandingPage() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-            {features.map((feature, i) => (
+            {features.map((feature) => (
               <motion.div
-                key={i}
+                key={feature.title}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
