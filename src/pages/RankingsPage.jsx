@@ -20,7 +20,7 @@ const TREND_ARROW = (trend) => {
   return '—'
 }
 
-function PollRow({ rank, prev, trend, name, conference, record, points, firstPlaceVotes, index }) {
+function PollRow({ rank, prev, trend, name, conference, record, points, firstPlaceVotes, ovr, index }) {
   return (
     <motion.div
       variants={staggerItem}
@@ -48,6 +48,11 @@ function PollRow({ rank, prev, trend, name, conference, record, points, firstPla
           {firstPlaceVotes > 0 && (
             <div className="text-[10px] text-accent">{firstPlaceVotes} #1</div>
           )}
+        </div>
+      )}
+      {ovr !== undefined && (
+        <div className="text-right flex-shrink-0">
+          <div className="text-xs text-primary-400 font-mono">{ovr} OVR</div>
         </div>
       )}
     </motion.div>
@@ -162,8 +167,8 @@ export default function RankingsPage() {
                   <p className="text-xs text-primary-500 mt-0.5">In-game preseason rankings</p>
                 </div>
                 <div className="text-xs text-right">
-                  <div className="text-highlight font-bold">July 9</div>
-                  <div className="text-primary-600">launch day</div>
+                  <div className="text-highlight font-bold">Official</div>
+                  <div className="text-primary-600">via EA Sports</div>
                 </div>
               </div>
 

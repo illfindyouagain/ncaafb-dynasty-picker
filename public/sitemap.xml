@@ -23,11 +23,43 @@
   <!-- Conference Builder -->
   <url>
     <loc>https://liftoffgaming.com/conference-builder</loc>
-    <lastmod>2025-10-31</lastmod>
+    <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-  
+
+  <!-- Teams Browser -->
+  <url>
+    <loc>https://liftoffgaming.com/teams</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Poll Rankings -->
+  <url>
+    <loc>https://liftoffgaming.com/rankings</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Toughest Places to Play -->
+  <url>
+    <loc>https://liftoffgaming.com/toughest-places</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Dynasty Challenge Generator -->
+  <url>
+    <loc>https://liftoffgaming.com/challenge</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- About -->
   <url>
     <loc>https://liftoffgaming.com/about</loc>

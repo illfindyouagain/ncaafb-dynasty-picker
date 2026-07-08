@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { useTeams } from '../hooks/useTeams'
+import { getToughestPlaceRank } from '../data/toughestPlaces'
 import { teamSlug } from '../lib/teamSlug'
 import Header from '../components/Header'
 import PageTransition from '../components/PageTransition'
@@ -238,6 +239,14 @@ export default function TeamDetailPage() {
                     <div className="text-sm text-primary-400">
                       {team.stadiumCapacity.toLocaleString()} capacity
                     </div>
+                  )}
+                  {getToughestPlaceRank(team.name) && (
+                    <Link
+                      to="/toughest-places"
+                      className="mt-3 inline-flex items-center gap-1.5 bg-accent/10 hover:bg-accent/20 border border-accent/25 px-2.5 py-1.5 text-xs text-accent transition-colors"
+                    >
+                      🔥 #{getToughestPlaceRank(team.name)} Toughest Place to Play — CFB 27
+                    </Link>
                   )}
                 </div>
               )}

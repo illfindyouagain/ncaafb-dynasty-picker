@@ -25,10 +25,24 @@ export default function ChangelogPage() {
 
   const changes = [
     {
+      date: 'July 2026',
+      version: 'v1.4.0',
+      title: 'CFB 27 Poll, Toughest Places to Play & Builder Revamp',
+      isLatest: true,
+      items: [
+        "NEW: CFB 27 in-game preseason Top 25 is live on the Polls page — EA's official team rankings (Oregon #1 at 91 OVR) with overall ratings shown per team, compared side-by-side against the AP Poll with the divergence breakdown.",
+        "NEW: Toughest Places to Play page (/toughest-places) — EA's official CFB 27 Top 25 Stadium Pulse rankings. Tiger Stadium holds #1. Includes new entries (Indiana, Virginia Tech, BYU), dropped teams, capacities, and venues-per-conference breakdown.",
+        'NEW: Conference Builder revamp — redesigned to match the Dynasty Turf look, with team OVR ratings on every card, a sort control (name, OVR, stars, stadium size, toughest venues), and a live conference strength panel showing average OVR, prestige, total capacity, and tough venue count.',
+        'NEW: 🔥 Toughest badge — teams from the EA Top 25 are flagged across the Conference Builder and on team detail stadium cards, each linking to the full rankings.',
+        'UPDATE: Conference Builder exports now include overall rating and toughest place rank for each team.',
+        'UPDATE: "Venues" added to site navigation; sitemap now covers all tool pages.',
+      ]
+    },
+    {
       date: 'June 2026',
       version: 'v1.3.0',
       title: 'Pac-12 Rebuild & New Categories',
-      isLatest: true,
+      isLatest: false,
       items: [
         'MOVED: Boise State, Colorado State, Fresno State, San Diego State, Utah State — Mountain West → Pac-12 (Pac-12 rebuild fully confirmed for CFB 27)',
         'NEW: Quarterback Factory category — 20 programs historically known for producing elite NFL quarterbacks (Alabama, Ohio State, USC, Oklahoma, Purdue, LSU, Tennessee, Notre Dame, and more)',

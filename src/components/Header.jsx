@@ -42,6 +42,7 @@ export default function Header() {
             {navLink('/teams', 'Teams')}
             {navLink('/rankings', 'Polls')}
             {navLink('/conference-builder', 'Builder')}
+            <span className="hidden sm:block">{navLink('/toughest-places', 'Venues')}</span>
             <span className="hidden sm:block">{navLink('/changelog', 'Changelog')}</span>
             <motion.div
               whileHover={{ scale: 1.03 }}

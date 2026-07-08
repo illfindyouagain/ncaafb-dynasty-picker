@@ -37,6 +37,7 @@ const features = [
   { title: 'Advanced Filters', description: 'Sort by OVR, prestige, stars, conference, and difficulty simultaneously.' },
   { title: 'Team Detail Pages', description: 'Full stat breakdown, stadium info, and dynasty context for every FBS program.' },
   { title: 'Conference Builder', description: 'Build custom conferences with any FBS teams, add divisions, and export as JSON.' },
+  { title: 'Toughest Places to Play', description: "EA's official CFB 27 Top 25 toughest stadiums — Stadium Pulse rankings, capacities, and who's new this year.", link: '/toughest-places' },
   { title: 'Dynasty Challenge Generator', description: 'Get random constraints — recruiting limits, playstyle rules, win goals — for your next CFB dynasty. Share your challenge with a link.', link: '/challenge' },
 ]
 
@@ -438,7 +439,7 @@ export default function LandingPage() {
                 <div>
                   <div className="text-[10px] text-primary-600 uppercase tracking-widest mb-3">Tools</div>
                   <ul className="space-y-2">
-                    {[['/picker', 'Team Picker'], ['/conference-builder', 'Conf Builder'], ['/teams', 'All Teams'], ['/rankings', 'Poll Rankings'], ['/challenge', 'Challenge Gen']].map(([to, label]) => (
+                    {[['/picker', 'Team Picker'], ['/conference-builder', 'Conf Builder'], ['/teams', 'All Teams'], ['/rankings', 'Poll Rankings'], ['/challenge', 'Challenge Gen'], ['/toughest-places', 'Toughest Venues']].map(([to, label]) => (
                       <li key={to}><Link to={to} className="text-primary-400 hover:text-accent text-sm transition-colors">{label}</Link></li>
                     ))}
                   </ul>

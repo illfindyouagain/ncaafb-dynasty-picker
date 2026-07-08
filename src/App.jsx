@@ -10,6 +10,7 @@ import ConferenceBuilderPage from './pages/ConferenceBuilderPage'
 import TeamDetailPage from './pages/TeamDetailPage'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import ChallengeGeneratorPage from './pages/ChallengeGeneratorPage'
+import ToughestPlacesPage from './pages/ToughestPlacesPage'
 import PollTicker from './components/PollTicker'
 import ErrorBoundary from './components/ErrorBoundary'
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/conference-builder" element={<ConferenceBuilderPage />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/challenge" element={<ChallengeGeneratorPage />} />
+            <Route path="/toughest-places" element={<ToughestPlacesPage />} />
           </Routes>
         </AnimatePresence>
       </div>

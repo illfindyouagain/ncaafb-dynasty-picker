@@ -1,8 +1,84 @@
-﻿import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useTeams } from '../hooks/useTeams'
+import { getToughestPlaceRank } from '../data/toughestPlaces'
 import Header from '../components/Header'
 import PageTransition from '../components/PageTransition'
+import ToughestBadge from '../components/ToughestBadge'
+
+const SORT_OPTIONS = [
+  { value: 'name', label: 'Name (A–Z)' },
+  { value: 'ovr', label: 'Overall Rating' },
+  { value: 'stars', label: 'Stars' },
+  { value: 'capacity', label: 'Stadium Size' },
+  { value: 'toughest', label: 'Toughest Venues' },
+]
+
+const sortTeams = (list, sortBy) => {
+  const sorted = [...list]
+  switch (sortBy) {
+    case 'ovr':
+      return sorted.sort((a, b) => b.overallRating - a.overallRating)
+    case 'stars':
+      return sorted.sort((a, b) => b.stars - a.stars || b.overallRating - a.overallRating)
+    case 'capacity':
+      return sorted.sort((a, b) => (b.stadiumCapacity || 0) - (a.stadiumCapacity || 0))
+    case 'toughest':
+      return sorted.sort((a, b) => {
+        const rankA = getToughestPlaceRank(a.name) || 99
+        const rankB = getToughestPlaceRank(b.name) || 99
+        return rankA - rankB || b.overallRating - a.overallRating
+      })
+    default:
+      return sorted.sort((a, b) => a.name.localeCompare(b.name))
+  }
+}
+
+const formatCapacity = (n) => {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(2)}M`
+  if (n >= 1000) return `${Math.round(n / 1000)}K`
+  return `${n}`
+}
+
+function TeamColorBar({ colors }) {
+  return (
+    <div className="w-1 self-stretch flex-shrink-0 flex flex-col rounded-sm overflow-hidden">
+      <div className="flex-1" style={{ backgroundColor: colors[0] }} />
+      <div className="flex-1" style={{ backgroundColor: colors[1] }} />
+    </div>
+  )
+}
+
+function ConferenceStats({ teams }) {
+  const stats = useMemo(() => {
+    if (teams.length === 0) return null
+    const avg = (key) => Math.round(teams.reduce((sum, t) => sum + t[key], 0) / teams.length)
+    return {
+      avgOvr: avg('overallRating'),
+      avgPrestige: avg('prestige'),
+      totalCapacity: teams.reduce((sum, t) => sum + (t.stadiumCapacity || 0), 0),
+      toughVenues: teams.filter(t => getToughestPlaceRank(t.name)).length,
+    }
+  }, [teams])
+
+  if (!stats) return null
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-primary-900 border border-primary-900 mb-4">
+      {[
+        { label: 'Avg OVR', value: stats.avgOvr, accent: stats.avgOvr >= 85 },
+        { label: 'Avg Prestige', value: stats.avgPrestige, accent: false },
+        { label: 'Total Capacity', value: formatCapacity(stats.totalCapacity), accent: false },
+        { label: '🔥 Tough Venues', value: `${stats.toughVenues}/${teams.length}`, accent: stats.toughVenues >= 3 },
+      ].map(({ label, value, accent }) => (
+        <div key={label} className="bg-card p-3 text-center">
+          <div className={`font-display text-2xl tracking-wider ${accent ? 'text-accent' : 'text-white'}`}>{value}</div>
+          <div className="text-[10px] text-primary-500 uppercase tracking-widest mt-0.5">{label}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export default function ConferenceBuilderPage() {
   const { teams, loading, error } = useTeams()
@@ -10,29 +86,30 @@ export default function ConferenceBuilderPage() {
   const [activeConferences, setActiveConferences] = useState({}) // Object storing all conferences being built
   const [searchQuery, setSearchQuery] = useState('')
   const [conferenceFilter, setConferenceFilter] = useState('all')
+  const [sortBy, setSortBy] = useState('name')
 
   // Set page-specific meta tags for SEO
   useEffect(() => {
     document.title = 'Conference Builder - CFB Dynasty Tools | Build Custom Conferences'
-    
+
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
-      metaDescription.setAttribute('content', 'Build custom conferences for NCAA Football 26. Create multiple conferences simultaneously, add 4-16 teams, organize divisions, export as JSON. Auto-save feature preserves your work.')
+      metaDescription.setAttribute('content', 'Build custom conferences for EA Sports College Football 27. Create multiple conferences simultaneously, add 4-16 teams, organize divisions, export as JSON. Auto-save feature preserves your work.')
     }
-    
+
     const ogTitle = document.querySelector('meta[property="og:title"]')
     if (ogTitle) {
       ogTitle.setAttribute('content', 'Conference Builder - CFB Dynasty Tools')
     }
-    
+
     const ogUrl = document.querySelector('meta[property="og:url"]')
     if (ogUrl) {
       ogUrl.setAttribute('content', 'https://liftoffgaming.com/conference-builder')
     }
-    
+
     const ogDescription = document.querySelector('meta[property="og:description"]')
     if (ogDescription) {
-      ogDescription.setAttribute('content', 'Build custom conferences for NCAA Football 26. Click to add teams, create divisions, export your perfect conference setup.')
+      ogDescription.setAttribute('content', 'Build custom conferences for CFB 27. Click to add teams, create divisions, export your perfect conference setup.')
     }
   }, [])
 
@@ -53,7 +130,7 @@ export default function ConferenceBuilderPage() {
   useEffect(() => {
     const savedConferences = localStorage.getItem('activeConferences')
     const savedSelection = localStorage.getItem('selectedConference')
-    
+
     if (savedConferences) {
       try {
         const parsed = JSON.parse(savedConferences)
@@ -65,7 +142,7 @@ export default function ConferenceBuilderPage() {
         localStorage.removeItem('activeConferences')
       }
     }
-    
+
     if (savedSelection) {
       setSelectedConferenceName(savedSelection)
     }
@@ -91,12 +168,15 @@ export default function ConferenceBuilderPage() {
     [activeConferences]
   )
 
-  const availableTeams = teams.filter(team => {
-    if (usedTeams.includes(team.id)) return false // Filter out teams used in any conference
-    if (searchQuery && !team.name.toLowerCase().includes(searchQuery.toLowerCase())) return false
-    if (conferenceFilter !== 'all' && team.conference !== conferenceFilter) return false
-    return true
-  })
+  const availableTeams = useMemo(() => {
+    const filtered = teams.filter(team => {
+      if (usedTeams.includes(team.id)) return false // Filter out teams used in any conference
+      if (searchQuery && !team.name.toLowerCase().includes(searchQuery.toLowerCase())) return false
+      if (conferenceFilter !== 'all' && team.conference !== conferenceFilter) return false
+      return true
+    })
+    return sortTeams(filtered, sortBy)
+  }, [teams, usedTeams, searchQuery, conferenceFilter, sortBy])
 
   // Update current conference in activeConferences
   const updateCurrentConference = (updates) => {
@@ -130,7 +210,7 @@ export default function ConferenceBuilderPage() {
 
   const moveTeamToDivision = (teamId, division) => {
     updateCurrentConference({
-      teams: conferenceTeams.map(t => 
+      teams: conferenceTeams.map(t =>
         t.id === teamId ? { ...t, division } : t
       )
     })
@@ -165,7 +245,7 @@ export default function ConferenceBuilderPage() {
   const clearAllConferences = () => {
     const conferenceCount = Object.keys(activeConferences).length
     const teamCount = Object.values(activeConferences).reduce((sum, conf) => sum + conf.teams.length, 0)
-    
+
     if (confirm(`Are you sure you want to delete all ${conferenceCount} conference(s) and ${teamCount} team(s)?\n\nThis cannot be undone!`)) {
       setActiveConferences({})
       setSelectedConferenceName('')
@@ -173,6 +253,19 @@ export default function ConferenceBuilderPage() {
       localStorage.removeItem('selectedConference')
     }
   }
+
+  const serializeTeam = (t, division) => ({
+    id: t.id,
+    name: t.name,
+    conference: t.conference,
+    location: t.location,
+    stars: t.stars,
+    overall: t.overallRating,
+    stadium: t.stadiumName,
+    capacity: t.stadiumCapacity,
+    toughestPlaceRank: getToughestPlaceRank(t.name),
+    division,
+  })
 
   const exportConference = () => {
     if (conferenceTeams.length === 0) {
@@ -196,13 +289,13 @@ export default function ConferenceBuilderPage() {
       const div1Teams = conferenceTeams.filter(t => t.division === 1)
       const div2Teams = conferenceTeams.filter(t => t.division === 2)
       const unassignedTeams = conferenceTeams.filter(t => !t.division)
-      
+
       // Check if both divisions have at least one team
       if (div1Teams.length === 0 || div2Teams.length === 0) {
         alert(`⚠️ Both divisions must have at least one team.\n\n${division1Name}: ${div1Teams.length} team(s)\n${division2Name}: ${div2Teams.length} team(s)\n\nPlease assign teams to both divisions before exporting.`)
         return
       }
-      
+
       if (unassignedTeams.length > 0) {
         const teamNames = unassignedTeams.map(t => t.name).join(', ')
         if (!confirm(`Warning: ${unassignedTeams.length} team(s) not assigned to a division:\n${teamNames}\n\nExport anyway?`)) {
@@ -217,16 +310,7 @@ export default function ConferenceBuilderPage() {
         division1: division1Name,
         division2: division2Name
       } : null,
-      teams: conferenceTeams.map(t => ({
-        id: t.id,
-        name: t.name,
-        conference: t.conference,
-        location: t.location,
-        stars: t.stars,
-        stadium: t.stadiumName,
-        capacity: t.stadiumCapacity,
-        division: useDivisions ? t.division : null
-      }))
+      teams: conferenceTeams.map(t => serializeTeam(t, useDivisions ? t.division : null))
     }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -239,10 +323,10 @@ export default function ConferenceBuilderPage() {
 
   const exportAllConferences = () => {
     // Filter out empty conferences
-    const conferenceList = Object.keys(activeConferences).filter(name => 
+    const conferenceList = Object.keys(activeConferences).filter(name =>
       activeConferences[name].teams && activeConferences[name].teams.length > 0
     )
-    
+
     if (conferenceList.length === 0) {
       alert('Build some conferences first!')
       return
@@ -251,7 +335,7 @@ export default function ConferenceBuilderPage() {
     // Check if any conference has less than 4 teams
     const incompleteConferences = conferenceList.filter(name => activeConferences[name].teams.length < 4)
     if (incompleteConferences.length > 0) {
-      const confDetails = incompleteConferences.map(name => 
+      const confDetails = incompleteConferences.map(name =>
         `${name} (${activeConferences[name].teams.length} teams)`
       ).join('\n')
       alert(`⚠️ EA Sports CFB requires at least 4 teams per conference.\n\nThe following conferences need more teams:\n${confDetails}\n\nPlease add more teams before exporting.`)
@@ -266,16 +350,7 @@ export default function ConferenceBuilderPage() {
           division1: conf.division1Name,
           division2: conf.division2Name
         } : null,
-        teams: conf.teams.map(t => ({
-          id: t.id,
-          name: t.name,
-          conference: t.conference,
-          location: t.location,
-          stars: t.stars,
-          stadium: t.stadiumName,
-          capacity: t.stadiumCapacity,
-          division: conf.useDivisions ? t.division : null
-        }))
+        teams: conf.teams.map(t => serializeTeam(t, conf.useDivisions ? t.division : null))
       }
     })
 
@@ -322,79 +397,82 @@ export default function ConferenceBuilderPage() {
     <div className="min-h-screen bg-app text-white">
       <Header />
 
-      <div className="max-w-7xl mx-auto p-4 md:p-8">
-        <div className="mb-6 flex justify-between items-start">
+      {/* Page header */}
+      <div className="border-b border-primary-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <Link to="/" className="text-accent hover:text-accent-400 transition-colors mb-4 inline-block">
-              ← Back to Home
-            </Link>
-            <h1 className="text-4xl md:text-5xl font-bold mb-2">🏗️ Conference Builder</h1>
-            <p className="text-primary-400">Build multiple conferences - switch between them without losing progress</p>
+            <h1 className="font-display text-5xl sm:text-7xl tracking-wider">CONFERENCE BUILDER</h1>
+            <p className="text-primary-400 text-sm mt-1">
+              Build multiple conferences — switch between them without losing progress
+            </p>
           </div>
           {Object.keys(activeConferences).length > 0 && (
             <div className="flex gap-3">
               <button
                 onClick={clearAllConferences}
-                className="bg-red-900 hover:bg-red-800 text-white px-6 py-3 rounded-lg font-bold transition-colors"
+                className="bg-red-950/60 hover:bg-red-900/60 border border-red-900 text-red-400 px-4 py-2 font-display tracking-wider text-sm transition-colors"
               >
-                🗑️ Clear All
+                CLEAR ALL
               </button>
               <button
                 onClick={exportAllConferences}
-                className="bg-highlight hover:bg-highlight-600 text-black px-6 py-3 rounded-lg font-bold transition-colors"
+                className="bg-highlight/10 hover:bg-highlight/20 border border-highlight/40 text-highlight px-4 py-2 font-display tracking-wider text-sm transition-colors"
               >
-                📥 Export All ({Object.keys(activeConferences).length})
+                EXPORT ALL ({Object.keys(activeConferences).length})
               </button>
             </div>
           )}
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
 
         {/* Active Conferences Tabs */}
         {Object.keys(activeConferences).length > 0 && (
-          <div className="bg-gradient-to-r from-highlight/10 to-accent/10 border border-highlight/30 rounded-lg p-4 mb-6">
-            <div>
-              <h3 className="font-bold text-lg mb-3">📋 Active Conferences ({Object.keys(activeConferences).length})</h3>
-              <div className="flex flex-wrap gap-2 mb-3">
-                {Object.keys(activeConferences).map(confName => {
-                  const conf = activeConferences[confName]
-                  const isActive = selectedConferenceName === confName
-                  const needsMoreTeams = conf.teams.length < 4
-                  return (
-                    <div key={confName} className={`border rounded-lg px-4 py-2 flex items-center gap-3 transition-all ${
-                      isActive 
-                        ? 'bg-accent text-black border-accent font-bold' 
-                        : 'bg-black/50 border-gray-700 hover:border-accent cursor-pointer'
-                    }`}
-                    onClick={() => setSelectedConferenceName(confName)}
+          <div className="bg-card border border-primary-900 border-l-4 border-l-highlight p-4 mb-6">
+            <div className="text-[10px] text-primary-500 uppercase tracking-widest mb-3 font-medium">
+              Active Conferences ({Object.keys(activeConferences).length})
+            </div>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {Object.keys(activeConferences).map(confName => {
+                const conf = activeConferences[confName]
+                const isActive = selectedConferenceName === confName
+                const needsMoreTeams = conf.teams.length < 4
+                return (
+                  <div key={confName} className={`border px-4 py-2 flex items-center gap-3 transition-all ${
+                    isActive
+                      ? 'bg-accent text-black border-accent font-bold'
+                      : 'bg-app border-primary-800 hover:border-accent cursor-pointer'
+                  }`}
+                  onClick={() => setSelectedConferenceName(confName)}
+                  >
+                    <span className="text-sm flex items-center gap-1">
+                      {needsMoreTeams && <span className={isActive ? 'text-yellow-700' : 'text-yellow-500'}>⚠️</span>}
+                      {confName} <span className="opacity-70">({conf.teams.length})</span>
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        deleteConference(confName)
+                      }}
+                      className={`font-bold transition-colors ${
+                        isActive ? 'text-black hover:text-red-700' : 'text-red-500 hover:text-red-400'
+                      }`}
                     >
-                      <span className="text-sm flex items-center gap-1">
-                        {needsMoreTeams && <span className={isActive ? 'text-yellow-700' : 'text-yellow-500'}>⚠️</span>}
-                        {confName} <span className="opacity-70">({conf.teams.length})</span>
-                      </span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          deleteConference(confName)
-                        }}
-                        className={`font-bold transition-colors ${
-                          isActive ? 'text-black hover:text-red-700' : 'text-red-500 hover:text-red-400'
-                        }`}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  )
-                })}
-              </div>
-              <div className="text-sm text-primary-400">
-                {usedTeams.length} teams used • {teams.length - usedTeams.length} remaining
-              </div>
+                      ×
+                    </button>
+                  </div>
+                )
+              })}
+            </div>
+            <div className="text-xs text-primary-500">
+              {usedTeams.length} teams used · {teams.length - usedTeams.length} remaining
             </div>
           </div>
         )}
 
-        <div className="bg-card rounded-lg p-4 mb-6">
-          <label className="block text-sm text-primary-400 mb-2 font-semibold">Select Conference to Build:</label>
+        <div className="bg-card border border-primary-900 p-4 mb-6">
+          <label className="block text-[10px] text-primary-500 uppercase tracking-widest mb-2 font-medium">Select Conference to Build</label>
           <select
             value={selectedConferenceName}
             onChange={(e) => {
@@ -414,9 +492,9 @@ export default function ConferenceBuilderPage() {
                 })
               }
             }}
-            className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white text-2xl font-bold focus:border-accent focus:outline-none"
+            className="w-full bg-app border border-primary-800 px-4 py-3 text-white font-display text-2xl tracking-wider focus:border-accent focus:outline-none"
           >
-            <option value="">-- Choose a Conference --</option>
+            <option value="">— CHOOSE A CONFERENCE —</option>
             {conferences.map(conf => (
               <option key={conf} value={conf}>{conf}</option>
             ))}
@@ -427,56 +505,75 @@ export default function ConferenceBuilderPage() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          <div className="bg-card rounded-lg p-6 lg:col-span-1">
-            <h2 className="text-2xl font-bold mb-4">Available Teams ({availableTeams.length})</h2>
+          <div className="bg-card border border-primary-900 p-5 lg:col-span-1">
+            <h2 className="font-display text-2xl tracking-wider mb-4">AVAILABLE TEAMS ({availableTeams.length})</h2>
             <div className="space-y-3 mb-4">
               <input
                 type="text"
                 placeholder="Search teams..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-black border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-accent focus:outline-none"
+                className="w-full bg-app border border-primary-800 px-4 py-2 text-white focus:border-accent focus:outline-none"
               />
-              <select
-                value={conferenceFilter}
-                onChange={(e) => setConferenceFilter(e.target.value)}
-                className="w-full bg-black border border-gray-700 rounded-lg px-4 py-2 text-white focus:border-accent focus:outline-none"
-              >
-                <option value="all">All Conferences</option>
-                {conferences.map(conf => (
-                  <option key={conf} value={conf}>{conf}</option>
-                ))}
-              </select>
+              <div className="grid grid-cols-2 gap-2">
+                <select
+                  value={conferenceFilter}
+                  onChange={(e) => setConferenceFilter(e.target.value)}
+                  className="w-full bg-app border border-primary-800 px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
+                >
+                  <option value="all">All Conferences</option>
+                  {conferences.map(conf => (
+                    <option key={conf} value={conf}>{conf}</option>
+                  ))}
+                </select>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full bg-app border border-primary-800 px-3 py-2 text-sm text-white focus:border-accent focus:outline-none"
+                >
+                  {SORT_OPTIONS.map(opt => (
+                    <option key={opt.value} value={opt.value}>Sort: {opt.label}</option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div className="space-y-2 max-h-[600px] overflow-y-auto">
+            <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
               {availableTeams.map(team => (
                 <button
                   key={team.id}
                   type="button"
                   onClick={() => addTeamToConference(team)}
-                  className="w-full text-left bg-black border border-gray-800 rounded-lg p-4 hover:border-accent hover:bg-gray-900 transition-colors"
+                  className="w-full text-left bg-app border border-primary-900 p-3 hover:border-accent hover:bg-card-hover transition-colors flex gap-3"
                 >
-                  <div className="font-bold text-lg mb-1">{team.name}</div>
-                  <div className="text-sm text-gray-400 space-y-1">
-                    <div>⭐ {team.stars} Stars • 🏟️ {team.conference}</div>
-                    <div>📍 {team.location}</div>
-                    {team.stadiumName && (
-                      <div>🏟️ {team.stadiumName} ({team.stadiumCapacity?.toLocaleString()})</div>
-                    )}
+                  <TeamColorBar colors={team.colors} />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <span className="font-semibold truncate">{team.name}</span>
+                      <span className="font-display text-lg text-accent tracking-wider flex-shrink-0">{team.overallRating}</span>
+                    </div>
+                    <div className="text-xs text-primary-500 space-y-0.5">
+                      <div>⭐ {team.stars} · {team.conference}</div>
+                      {team.stadiumName && (
+                        <div className="truncate">{team.stadiumName} ({team.stadiumCapacity?.toLocaleString()})</div>
+                      )}
+                    </div>
+                    <div className="mt-1.5 empty:hidden">
+                      <ToughestBadge teamName={team.name} />
+                    </div>
                   </div>
                 </button>
               ))}
               {availableTeams.length === 0 && (
-                <p className="text-gray-400 text-center py-8">No teams found</p>
+                <p className="text-primary-500 text-center py-8">No teams found</p>
               )}
             </div>
           </div>
 
-          <div className="bg-card rounded-lg p-6 lg:col-span-2">
+          <div className="bg-card border border-primary-900 p-5 lg:col-span-2">
             <div className="flex justify-between items-center mb-4">
               <div>
-                <h2 className="text-2xl font-bold">
-                  {selectedConferenceName || 'Select Conference'} ({conferenceTeams.length}/16)
+                <h2 className="font-display text-2xl tracking-wider">
+                  {(selectedConferenceName || 'SELECT CONFERENCE').toUpperCase()} ({conferenceTeams.length}/16)
                 </h2>
                 {selectedConferenceName && conferenceTeams.length > 0 && conferenceTeams.length < 4 && (
                   <p className="text-yellow-500 text-sm mt-1">
@@ -489,24 +586,26 @@ export default function ConferenceBuilderPage() {
                   <>
                     <button
                       onClick={exportConference}
-                      className="bg-accent hover:bg-accent-600 text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm"
+                      className="bg-accent hover:bg-accent-400 text-black px-4 py-2 font-display tracking-wider transition-colors text-sm"
                     >
-                      📥 Export
+                      EXPORT
                     </button>
                     <button
                       onClick={clearAll}
-                      className="bg-red-900 hover:bg-red-800 text-white px-4 py-2 rounded-lg font-bold transition-colors text-sm"
+                      className="bg-red-950/60 hover:bg-red-900/60 border border-red-900 text-red-400 px-4 py-2 font-display tracking-wider transition-colors text-sm"
                     >
-                      🗑️ Clear
+                      CLEAR
                     </button>
                   </>
                 )}
               </div>
             </div>
 
+            <ConferenceStats teams={conferenceTeams} />
+
             {conferenceTeams.length >= 8 && (
-              <div className="mb-4 bg-primary-900/50 border border-accent/30 rounded-lg p-4">
-                <label className="flex items-center gap-3 mb-3 cursor-pointer">
+              <div className="mb-4 bg-app border border-accent/30 p-4">
+                <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={useDivisions}
@@ -519,7 +618,7 @@ export default function ConferenceBuilderPage() {
                     }}
                     className="w-5 h-5 accent-accent cursor-pointer"
                   />
-                  <span className="font-bold text-accent">Enable Divisions</span>
+                  <span className="font-display tracking-wider text-accent">ENABLE DIVISIONS</span>
                 </label>
                 {useDivisions && (
                   <div className="grid grid-cols-2 gap-3 mt-3">
@@ -527,14 +626,14 @@ export default function ConferenceBuilderPage() {
                       type="text"
                       value={division1Name}
                       onChange={(e) => updateCurrentConference({ division1Name: e.target.value })}
-                      className="bg-black border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-accent focus:outline-none"
+                      className="bg-app border border-primary-800 px-3 py-2 text-white focus:border-accent focus:outline-none"
                       placeholder="Division 1 Name"
                     />
                     <input
                       type="text"
                       value={division2Name}
                       onChange={(e) => updateCurrentConference({ division2Name: e.target.value })}
-                      className="bg-black border border-gray-700 rounded-lg px-3 py-2 text-white focus:border-accent focus:outline-none"
+                      className="bg-app border border-primary-800 px-3 py-2 text-white focus:border-accent focus:outline-none"
                       placeholder="Division 2 Name"
                     />
                   </div>
@@ -543,61 +642,57 @@ export default function ConferenceBuilderPage() {
             )}
 
             <div
-              className={`min-h-[600px] border-2 border-dashed rounded-lg p-4 transition-colors ${
-                conferenceTeams.length === 0 ? 'border-gray-700 bg-black/50' : 'border-gray-800 bg-black'
+              className={`min-h-[500px] border-2 border-dashed p-4 transition-colors ${
+                conferenceTeams.length === 0 ? 'border-primary-800 bg-app/50' : 'border-primary-900 bg-app'
               }`}
             >
               {conferenceTeams.length === 0 ? (
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-center text-gray-400">
-                    <div className="text-6xl mb-4">👈</div>
+                <div className="flex items-center justify-center h-full min-h-[400px]">
+                  <div className="text-center text-primary-500">
+                    <div className="font-display text-6xl text-primary-800 tracking-wider mb-4">EMPTY</div>
                     <p className="text-lg">Click teams on the left to add them to your conference</p>
-                    <p className="text-sm mt-2">4-16 teams per conference (EA Sports CFB requirement)</p>
+                    <p className="text-sm mt-2">4–16 teams per conference (EA Sports CFB requirement)</p>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {conferenceTeams.map((team, index) => (
                     <div
                       key={team.id}
-                      className="bg-primary-900/50 border border-gray-800 rounded-lg p-4 relative"
+                      className="bg-card border border-primary-900 p-3 flex gap-3 items-start"
                     >
-                      <div className="absolute top-2 left-2 bg-accent text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
-                        {index + 1}
+                      <div className="w-7 text-right flex-shrink-0 pt-0.5">
+                        <span className="font-display text-xl text-primary-500 tracking-wider">{index + 1}</span>
                       </div>
-                      <button
-                        onClick={() => removeTeam(team.id)}
-                        className="absolute top-2 right-2 text-red-500 hover:text-red-400 transition-colors font-bold text-xl"
-                      >
-                        
-                      </button>
-                      <div className="ml-8 mr-8">
-                        <div className="font-bold text-lg mb-1">{team.name}</div>
-                        <div className="text-sm text-gray-400 space-y-1">
-                          <div> {team.stars} Stars  {team.conference}</div>
-                          <div> {team.location}</div>
-                          {team.stadiumName && (
-                            <div> {team.stadiumName} ({team.stadiumCapacity?.toLocaleString()})</div>
-                          )}
+                      <TeamColorBar colors={team.colors} />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-semibold">{team.name}</span>
+                          <span className="font-display text-accent tracking-wider">{team.overallRating}</span>
+                          <ToughestBadge teamName={team.name} />
+                        </div>
+                        <div className="text-xs text-primary-500 mt-0.5">
+                          ⭐ {team.stars} · {team.conference}
+                          {team.stadiumName && ` · ${team.stadiumName} (${team.stadiumCapacity?.toLocaleString()})`}
                         </div>
                         {useDivisions && (
-                          <div className="mt-3 flex gap-2">
+                          <div className="mt-2 flex gap-2">
                             <button
                               onClick={() => moveTeamToDivision(team.id, 1)}
-                              className={`flex-1 px-3 py-2 rounded-lg font-bold text-sm transition-colors ${
-                                team.division === 1 
-                                  ? 'bg-accent text-white' 
-                                  : 'bg-black border border-gray-700 text-gray-400 hover:border-accent'
+                              className={`flex-1 px-3 py-1.5 font-display tracking-wider text-sm transition-colors ${
+                                team.division === 1
+                                  ? 'bg-accent text-black'
+                                  : 'bg-app border border-primary-800 text-primary-400 hover:border-accent'
                               }`}
                             >
                               {division1Name}
                             </button>
                             <button
                               onClick={() => moveTeamToDivision(team.id, 2)}
-                              className={`flex-1 px-3 py-2 rounded-lg font-bold text-sm transition-colors ${
-                                team.division === 2 
-                                  ? 'bg-accent text-white' 
-                                  : 'bg-black border border-gray-700 text-gray-400 hover:border-accent'
+                              className={`flex-1 px-3 py-1.5 font-display tracking-wider text-sm transition-colors ${
+                                team.division === 2
+                                  ? 'bg-accent text-black'
+                                  : 'bg-app border border-primary-800 text-primary-400 hover:border-accent'
                               }`}
                             >
                               {division2Name}
@@ -605,6 +700,13 @@ export default function ConferenceBuilderPage() {
                           </div>
                         )}
                       </div>
+                      <button
+                        onClick={() => removeTeam(team.id)}
+                        className="text-red-500 hover:text-red-400 transition-colors font-bold text-xl flex-shrink-0"
+                        aria-label={`Remove ${team.name}`}
+                      >
+                        ×
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -612,25 +714,38 @@ export default function ConferenceBuilderPage() {
             </div>
 
             {conferenceTeams.length >= 16 && (
-              <div className="mt-4 bg-yellow-900/20 border border-yellow-600 rounded-lg p-3 text-yellow-400 text-sm text-center">
-                 Maximum 16 teams reached
+              <div className="mt-4 bg-yellow-900/20 border border-yellow-600 p-3 text-yellow-400 text-sm text-center">
+                Maximum 16 teams reached
               </div>
             )}
           </div>
         </div>
 
-        <div className="mt-6 bg-card rounded-lg p-6">
-          <h3 className="font-bold mb-2">💡 Tips:</h3>
-          <ul className="text-sm text-gray-400 space-y-1">
-            <li>📋 Select a conference from the dropdown to start building</li>
-            <li>👆 Click teams on the left to add them to your conference</li>
-            <li>🔄 Switch between conferences using the dropdown or tabs - your work is saved automatically</li>
-            <li>💾 Auto-save enabled! Your work survives page refresh</li>
-            <li>❌ Click × on a team to remove it, or × on a conference tab to delete the whole conference</li>
-            <li>📊 Each conference needs 4-16 teams (EA Sports CFB requirement)</li>
-            <li>➗ With 8+ teams, you can enable divisions (East/West, North/South, etc.)</li>
-            <li>📥 Export individual conferences or use "Export All" to download all at once</li>
-          </ul>
+        <div className="mt-6 grid md:grid-cols-2 gap-6">
+          <div className="bg-card border border-primary-900 p-5">
+            <h3 className="font-display text-xl tracking-wider mb-3">TIPS</h3>
+            <ul className="text-sm text-primary-400 space-y-1.5">
+              <li>· Select a conference from the dropdown to start building</li>
+              <li>· Click teams on the left to add them — sort by OVR, stars, or toughest venues</li>
+              <li>· Switch between conferences using the tabs — work is saved automatically</li>
+              <li>· Each conference needs 4–16 teams (EA Sports CFB requirement)</li>
+              <li>· With 8+ teams, you can enable divisions (East/West, North/South, etc.)</li>
+              <li>· Export individual conferences or use Export All to download everything</li>
+            </ul>
+          </div>
+          <div className="bg-card border border-primary-900 border-l-4 border-l-accent p-5">
+            <h3 className="font-display text-xl tracking-wider mb-2">🔥 BUILD A GAUNTLET</h3>
+            <p className="text-sm text-primary-400 leading-relaxed mb-4">
+              Teams with the 🔥 badge made EA's official CFB 27 Top 25 Toughest Places to Play.
+              Sort by "Toughest Venues" and stack them into one conference where every road game is hostile.
+            </p>
+            <Link
+              to="/toughest-places"
+              className="inline-flex items-center gap-2 bg-accent/10 hover:bg-accent/20 border border-accent/40 text-accent px-4 py-2 font-display tracking-wider text-sm transition-colors"
+            >
+              SEE THE FULL TOP 25 →
+            </Link>
+          </div>
         </div>
       </div>
     </div>

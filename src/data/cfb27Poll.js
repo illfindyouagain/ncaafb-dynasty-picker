@@ -1,10 +1,30 @@
-// CFB 27 in-game preseason poll — populate after July 9 launch
-// Structure matches AP Poll teams array from useAPPoll hook
-export const CFB27_PRESEASON_POLL = null
-
-// Uncomment and fill in after CFB 27 releases:
-// export const CFB27_PRESEASON_POLL = [
-//   { rank: 1, name: 'Georgia', conference: 'SEC', record: null },
-//   { rank: 2, name: 'Ohio State', conference: 'Big Ten', record: null },
-//   ...
-// ]
+// CFB 27 in-game preseason poll — EA's official Top 25 team rankings
+// Source: EA "College Football 27 — Team Ratings" (order preserved within rating ties)
+// Structure matches AP Poll teams array from useAPPoll hook; `ovr` is CFB 27-only
+export const CFB27_PRESEASON_POLL = [
+  { rank: 1, name: 'Oregon', conference: 'Big Ten', record: null, ovr: 91 },
+  { rank: 2, name: 'Ohio State', conference: 'Big Ten', record: null, ovr: 90 },
+  { rank: 3, name: 'Indiana', conference: 'Big Ten', record: null, ovr: 90 },
+  { rank: 4, name: 'Notre Dame', conference: 'Independent', record: null, ovr: 89 },
+  { rank: 5, name: 'Texas', conference: 'SEC', record: null, ovr: 89 },
+  { rank: 6, name: 'Ole Miss', conference: 'SEC', record: null, ovr: 88 },
+  { rank: 7, name: 'Miami', conference: 'ACC', record: null, ovr: 88 },
+  { rank: 8, name: 'LSU', conference: 'SEC', record: null, ovr: 88 },
+  { rank: 9, name: 'Georgia', conference: 'SEC', record: null, ovr: 87 },
+  { rank: 10, name: 'Oklahoma', conference: 'SEC', record: null, ovr: 87 },
+  { rank: 11, name: 'Texas Tech', conference: 'Big 12', record: null, ovr: 87 },
+  { rank: 12, name: 'Alabama', conference: 'SEC', record: null, ovr: 86 },
+  { rank: 13, name: 'BYU', conference: 'Big 12', record: null, ovr: 86 },
+  { rank: 14, name: 'Texas A&M', conference: 'SEC', record: null, ovr: 86 },
+  { rank: 15, name: 'USC', conference: 'Big Ten', record: null, ovr: 86 },
+  { rank: 16, name: 'Michigan', conference: 'Big Ten', record: null, ovr: 85 },
+  { rank: 17, name: 'Missouri', conference: 'SEC', record: null, ovr: 85 },
+  { rank: 18, name: 'Tennessee', conference: 'SEC', record: null, ovr: 85 },
+  { rank: 19, name: 'Florida', conference: 'SEC', record: null, ovr: 84 },
+  { rank: 20, name: 'Louisville', conference: 'ACC', record: null, ovr: 84 },
+  { rank: 21, name: 'Auburn', conference: 'SEC', record: null, ovr: 83 },
+  { rank: 22, name: 'Clemson', conference: 'ACC', record: null, ovr: 83 },
+  { rank: 23, name: 'Houston', conference: 'Big 12', record: null, ovr: 83 },
+  { rank: 24, name: 'Nebraska', conference: 'Big Ten', record: null, ovr: 83 },
+  { rank: 25, name: 'Oklahoma State', conference: 'Big 12', record: null, ovr: 83 },
+]
