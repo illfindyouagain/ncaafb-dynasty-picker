@@ -35,6 +35,7 @@ export default function ChangelogPage() {
         'NEW: 404 page — broken or mistyped links now land on a "Turnover on Downs" page with quick links back to the tools.',
         'UPDATE: Sitemap expanded from 6 to 147 URLs — every team detail page is now indexed for search engines.',
         'UPDATE: "Support the Site" link added to the footer.',
+        'UPDATE: Contact is now Reddit (u/liftoffgaming) and X (@liftoffgaminghq) — email removed.',
       ]
     },
     {

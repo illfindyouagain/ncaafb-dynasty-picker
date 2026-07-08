@@ -203,12 +203,6 @@ export default function AboutPage() {
               >
                 <span>🐦</span> @liftoffgaminghq
               </a>
-              <a
-                href="mailto:user@liftoffgaming.com"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors text-sm sm:text-base"
-              >
-                <span>📧</span> Email
-              </a>
             </div>
           </div>
         </section>
