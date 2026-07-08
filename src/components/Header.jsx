@@ -1,9 +1,27 @@
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { motion } from 'motion/react'
+import { motion, AnimatePresence } from 'motion/react'
 import CFB27Banner from './CFB27Banner'
+
+const MOBILE_LINKS = [
+  ['/picker', 'Team Picker'],
+  ['/teams', 'All Teams'],
+  ['/rankings', 'Polls'],
+  ['/conference-builder', 'Conference Builder'],
+  ['/toughest-places', 'Toughest Venues'],
+  ['/challenge', 'Challenge Generator'],
+  ['/changelog', 'Changelog'],
+  ['/about', 'About'],
+]
 
 export default function Header() {
   const { pathname } = useLocation()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  // Close the mobile menu whenever the route changes
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [pathname])
 
   const navLink = (to, label) => {
     const active = pathname === to
@@ -38,12 +56,14 @@ export default function Header() {
             </span>
           </Link>
 
-          <nav className="flex items-center gap-4 sm:gap-6">
-            {navLink('/teams', 'Teams')}
-            {navLink('/rankings', 'Polls')}
-            {navLink('/conference-builder', 'Builder')}
-            <span className="hidden sm:block">{navLink('/toughest-places', 'Venues')}</span>
-            <span className="hidden sm:block">{navLink('/changelog', 'Changelog')}</span>
+          <nav className="flex items-center gap-3 sm:gap-6">
+            <div className="hidden sm:flex items-center gap-6">
+              {navLink('/teams', 'Teams')}
+              {navLink('/rankings', 'Polls')}
+              {navLink('/conference-builder', 'Builder')}
+              {navLink('/toughest-places', 'Venues')}
+              {navLink('/changelog', 'Changelog')}
+            </div>
             <motion.div
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.96 }}
@@ -56,9 +76,47 @@ export default function Header() {
                 PICK NOW →
               </Link>
             </motion.div>
+            <button
+              type="button"
+              onClick={() => setIsMenuOpen(open => !open)}
+              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMenuOpen}
+              className="sm:hidden text-white text-2xl leading-none w-9 h-9 flex items-center justify-center border border-primary-800 hover:border-accent transition-colors"
+            >
+              {isMenuOpen ? '✕' : '☰'}
+            </button>
           </nav>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.nav
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            className="sm:hidden border-t border-primary-900/60 bg-app"
+            aria-label="Mobile navigation"
+          >
+            {MOBILE_LINKS.map(([to, label]) => {
+              const active = pathname === to
+              return (
+                <Link
+                  key={to}
+                  to={to}
+                  className={`block px-6 py-3 font-display text-lg tracking-wider border-b border-primary-900/40 transition-colors ${
+                    active ? 'text-accent' : 'text-primary-300 hover:text-white'
+                  }`}
+                >
+                  {label}
+                </Link>
+              )
+            })}
+          </motion.nav>
+        )}
+      </AnimatePresence>
       </div>
     </header>
   )

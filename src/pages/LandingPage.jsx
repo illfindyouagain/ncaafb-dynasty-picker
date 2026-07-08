@@ -447,14 +447,14 @@ export default function LandingPage() {
                 <div>
                   <div className="text-[10px] text-primary-600 uppercase tracking-widest mb-3">Info</div>
                   <ul className="space-y-2">
-                    {[['/about', 'About & FAQ'], ['/changelog', 'Changelog'], ['/privacy', 'Privacy Policy']].map(([to, label]) => (
-                      <li key={to}><Link to={to} className="text-primary-400 hover:text-accent text-sm transition-colors">{label}</Link></li>
+                    {[['/about', 'About & FAQ'], ['/about', 'Support the Site ☕'], ['/changelog', 'Changelog'], ['/privacy', 'Privacy Policy']].map(([to, label]) => (
+                      <li key={label}><Link to={to} className="text-primary-400 hover:text-accent text-sm transition-colors">{label}</Link></li>
                     ))}
                   </ul>
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <div className="text-[10px] text-primary-600 uppercase tracking-widest mb-3">Updates</div>
-                  <Link to="/changelog" className="text-primary-400 hover:text-accent text-sm transition-colors block">v1.2.0 — Challenge generator + shareable cards</Link>
+                  <Link to="/changelog" className="text-primary-400 hover:text-accent text-sm transition-colors block">v1.4.1 — Toughest places, builder revamp, mobile nav</Link>
                   <Link to="/changelog" className="text-primary-500 hover:text-accent text-xs transition-colors block mt-1">View all changes →</Link>
                 </div>
               </div>

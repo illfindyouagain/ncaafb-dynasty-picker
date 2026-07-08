@@ -188,12 +188,12 @@ export default function AboutPage() {
             <p>Have questions, suggestions, or found a bug? I'd love to hear from you!</p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <a
-                href="https://www.reddit.com/user/arcanefuse"
+                href="https://www.reddit.com/user/liftoffgaming"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-800 transition-colors text-sm sm:text-base"
               >
-                <span>💬</span> u/arcanefuse
+                <span>💬</span> u/liftoffgaming
               </a>
               <a
                 href="https://twitter.com/liftoffgaminghq"

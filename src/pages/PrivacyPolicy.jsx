@@ -68,12 +68,12 @@ export default function PrivacyPolicy() {
               <p>
                 Reach out via{' '}
                 <a
-                  href="https://www.reddit.com/user/arcanefuse"
+                  href="https://www.reddit.com/user/liftoffgaming"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-accent hover:underline"
                 >
-                  u/arcanefuse on Reddit
+                  u/liftoffgaming on Reddit
                 </a>
                 {' '}or{' '}
                 <a

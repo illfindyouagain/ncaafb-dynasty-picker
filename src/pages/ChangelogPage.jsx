@@ -26,9 +26,22 @@ export default function ChangelogPage() {
   const changes = [
     {
       date: 'July 2026',
+      version: 'v1.4.1',
+      title: 'Launch Readiness — Mobile Nav, Social Cards & SEO',
+      isLatest: true,
+      items: [
+        'NEW: Mobile navigation menu — every page is now reachable on phones via the ☰ menu (Team Picker, Teams, Polls, Builder, Toughest Venues, Challenge Generator, Changelog, About).',
+        'NEW: Social share image — links shared on Reddit, X, and Discord now show a proper preview card instead of a blank thumbnail.',
+        'NEW: 404 page — broken or mistyped links now land on a "Turnover on Downs" page with quick links back to the tools.',
+        'UPDATE: Sitemap expanded from 6 to 147 URLs — every team detail page is now indexed for search engines.',
+        'UPDATE: "Support the Site" link added to the footer.',
+      ]
+    },
+    {
+      date: 'July 2026',
       version: 'v1.4.0',
       title: 'CFB 27 Poll, Toughest Places to Play & Builder Revamp',
-      isLatest: true,
+      isLatest: false,
       items: [
         "NEW: CFB 27 in-game preseason Top 25 is live on the Polls page — EA's official team rankings (Oregon #1 at 91 OVR) with overall ratings shown per team, compared side-by-side against the AP Poll with the divergence breakdown.",
         "NEW: Toughest Places to Play page (/toughest-places) — EA's official CFB 27 Top 25 Stadium Pulse rankings. Tiger Stadium holds #1. Includes new entries (Indiana, Virginia Tech, BYU), dropped teams, capacities, and venues-per-conference breakdown.",
